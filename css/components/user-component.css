@@ -1,6 +1,8 @@
 .user-component {
     justify-content: space-between;
+    margin-bottom: 10px;
 }
+
 .user-component,
 .user-component__column:first-child {
     display: flex;
