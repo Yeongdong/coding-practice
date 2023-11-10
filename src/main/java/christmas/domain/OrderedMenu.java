@@ -4,10 +4,10 @@ import christmas.utils.Menu;
 
 public class OrderedMenu {
     private static final String INVALID_ORDER_MESSAGE = "[ERROR] 유효하지 않은 주문입니다. 다시 입력해 주세요.";
-    private final String menuName;
+    private final Menu menuName;
     private final int amount;
 
-    private OrderedMenu(String menuName, int amount) {
+    private OrderedMenu(Menu menuName, int amount) {
         this.menuName = menuName;
         this.amount = amount;
     }
@@ -15,7 +15,7 @@ public class OrderedMenu {
     public static OrderedMenu from(String menuName, int amount) {
         validateInMenu(menuName);
         validateAmount(amount);
-        return new OrderedMenu(menuName, amount);
+        return new OrderedMenu(Menu.valueOf(menuName), amount);
     }
 
     private static void validateInMenu(String menuName) {
@@ -32,7 +32,7 @@ public class OrderedMenu {
         }
     }
 
-    public String getMenuName() {
+    public Menu getMenuName() {
         return menuName;
     }
 

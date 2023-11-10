@@ -10,6 +10,7 @@ public class OrderedMenus {
     private final List<OrderedMenu> orderedMenus;
     private final int totalAmount;
 
+
     private OrderedMenus(List<OrderedMenu> orderedMenus, int totalAmount) {
         this.orderedMenus = orderedMenus;
         this.totalAmount = totalAmount;
@@ -28,6 +29,15 @@ public class OrderedMenus {
             orderedMenus.add(OrderedMenu.from(orderedMenuNames.get(i), amounts.get(i)));
         }
         return orderedMenus;
+    }
+
+    public int getTotalPriceBeforeDiscount() {
+        int totalPriceBeforeDiscount = 0;
+        for (int i = 0; i < getOrderedMenus().size(); i++) {
+            OrderedMenu orderedMenu = getOrderedMenus().get(i);
+            totalPriceBeforeDiscount += orderedMenu.getMenuName().getPrice() * orderedMenu.getAmount();
+        }
+        return totalPriceBeforeDiscount;
     }
 
     private static int getTotalAmount(List<Integer> amounts) {
@@ -49,9 +59,5 @@ public class OrderedMenus {
 
     public List<OrderedMenu> getOrderedMenus() {
         return orderedMenus;
-    }
-
-    public int getTotalAmount() {
-        return totalAmount;
     }
 }
