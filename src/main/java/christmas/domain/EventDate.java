@@ -1,5 +1,7 @@
 package christmas.domain;
 
+import christmas.utils.PromotionRules;
+
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.DayOfWeek;
@@ -24,7 +26,7 @@ public class EventDate {
     }
 
     private static void validateDate(int visitDate) {
-        if (visitDate < 1 || visitDate > 31) {
+        if (visitDate < PromotionRules.START_DATE.getValue() || visitDate > PromotionRules.END_DATE.getValue()) {
             throw new IllegalArgumentException(INVALID_DATE_MESSAGE);
         }
     }
@@ -46,7 +48,7 @@ public class EventDate {
     public boolean isChristmasPeriod(int visitDate) {
         Date date = toDate(visitDate);
         LocalDate localDate = getLocalDate(date);
-        return localDate.getMonth() == Month.DECEMBER && localDate.getDayOfMonth() <= 25;
+        return localDate.getMonth() == Month.DECEMBER && localDate.getDayOfMonth() <= PromotionRules.CHRISTMAS_DATE.getValue();
     }
 
     public boolean isWeekend(int visitDate) {
@@ -60,7 +62,7 @@ public class EventDate {
         Date date = toDate(visitDate);
         LocalDate localDate = getLocalDate(date);
         DayOfWeek dayOfWeek = localDate.getDayOfWeek();
-        return dayOfWeek == DayOfWeek.SUNDAY || localDate.getDayOfMonth() == 25;
+        return dayOfWeek == DayOfWeek.SUNDAY || localDate.getDayOfMonth() == PromotionRules.CHRISTMAS_DATE.getValue();
     }
 
     public int getVisitDate() {

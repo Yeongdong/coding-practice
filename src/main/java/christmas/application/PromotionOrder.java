@@ -14,5 +14,8 @@ public class PromotionOrder {
         OutputView.printTotalPriceBeforeDiscount(orderedMenus); // <할인 전 총주문 금액>
         OutputView.printGiveawayMenu(orderedMenus); // <증정 메뉴>
         OutputView.printBenefits(eventDate, orderedMenus); // <혜택 내역>
+        OutputView.printTotalBenefitPrice();    // <총혜택 금액>
+        OutputView.printEstimatePrice(orderedMenus);    // <할인 후 예상 결제 금액>
+        OutputView.printEventBadge();       // <12월 이벤트 배지>
     }
 }

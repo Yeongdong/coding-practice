@@ -1,5 +1,7 @@
 package christmas.domain;
 
+import christmas.utils.PromotionRules;
+
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -8,7 +10,7 @@ import java.util.Set;
 public class OrderedMenus {
     private static final String INVALID_ORDER_MESSAGE = "[ERROR] 유효하지 않은 주문입니다. 다시 입력해 주세요.";
     private final List<OrderedMenu> orderedMenus;
-    private final int totalAmount;
+    private static int totalAmount;
 
 
     private OrderedMenus(List<OrderedMenu> orderedMenus, int totalAmount) {
@@ -40,12 +42,13 @@ public class OrderedMenus {
         return totalPriceBeforeDiscount;
     }
 
-    private static int getTotalAmount(List<Integer> amounts) {
-        return amounts.stream().mapToInt(Integer::intValue).sum();
+    public static int getTotalAmount(List<Integer> amounts) {
+        totalAmount = amounts.stream().mapToInt(Integer::intValue).sum();
+        return totalAmount;
     }
 
     private static void validateTotalAmount(int totalAmount) {
-        if (totalAmount > 20) {
+        if (totalAmount > PromotionRules.MAXIMUM_AMOUNT.getValue()) {
             throw new IllegalArgumentException(INVALID_ORDER_MESSAGE);
         }
     }
@@ -55,6 +58,10 @@ public class OrderedMenus {
         if (menuNames.size() != orderedMenuNames.size()) {
             throw new IllegalArgumentException(INVALID_ORDER_MESSAGE);
         }
+    }
+
+    public static boolean canGetBenefit(OrderedMenus orderedMenus) {
+        return orderedMenus.getTotalPriceBeforeDiscount() >= PromotionRules.MINIMUN_PRICE.getValue();
     }
 
     public List<OrderedMenu> getOrderedMenus() {
