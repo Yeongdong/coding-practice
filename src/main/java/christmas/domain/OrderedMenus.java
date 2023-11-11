@@ -25,14 +25,6 @@ public class OrderedMenus {
         return new OrderedMenus(orderedMenus, getTotalAmount(amounts));
     }
 
-    private static List<OrderedMenu> createOrder(List<String> orderedMenuNames, List<Integer> amounts) {
-        List<OrderedMenu> orderedMenus = new ArrayList<>();
-        for (int i = 0; i < orderedMenuNames.size(); i++) {
-            orderedMenus.add(OrderedMenu.from(orderedMenuNames.get(i), amounts.get(i)));
-        }
-        return orderedMenus;
-    }
-
     public int getTotalPriceBeforeDiscount() {
         int totalPriceBeforeDiscount = 0;
         for (int i = 0; i < getOrderedMenus().size(); i++) {
@@ -42,7 +34,28 @@ public class OrderedMenus {
         return totalPriceBeforeDiscount;
     }
 
-    public static int getTotalAmount(List<Integer> amounts) {
+    public static boolean canGetBenefit(OrderedMenus orderedMenus) {
+        return orderedMenus.getTotalPriceBeforeDiscount() >= PromotionRules.MINIMUN_PRICE.getValue();
+    }
+
+    public static boolean hasOnlyBeverage(OrderedMenus orderedMenus) {
+        return orderedMenus.getOrderedMenus().stream()
+                .allMatch(orderedMenu -> orderedMenu.getMenuName().getMenuCategory() == MenuCategory.BEVERAGE);
+    }
+
+    public List<OrderedMenu> getOrderedMenus() {
+        return orderedMenus;
+    }
+
+    private static List<OrderedMenu> createOrder(List<String> orderedMenuNames, List<Integer> amounts) {
+        List<OrderedMenu> orderedMenus = new ArrayList<>();
+        for (int i = 0; i < orderedMenuNames.size(); i++) {
+            orderedMenus.add(OrderedMenu.from(orderedMenuNames.get(i), amounts.get(i)));
+        }
+        return orderedMenus;
+    }
+
+    private static int getTotalAmount(List<Integer> amounts) {
         totalAmount = amounts.stream().mapToInt(Integer::intValue).sum();
         return totalAmount;
     }
@@ -58,13 +71,5 @@ public class OrderedMenus {
         if (menuNames.size() != orderedMenuNames.size()) {
             throw new IllegalArgumentException(INVALID_ORDER_MESSAGE);
         }
-    }
-
-    public static boolean canGetBenefit(OrderedMenus orderedMenus) {
-        return orderedMenus.getTotalPriceBeforeDiscount() >= PromotionRules.MINIMUN_PRICE.getValue();
-    }
-
-    public List<OrderedMenu> getOrderedMenus() {
-        return orderedMenus;
     }
 }

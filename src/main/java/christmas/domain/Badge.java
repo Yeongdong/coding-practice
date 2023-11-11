@@ -7,7 +7,7 @@ public class Badge {
     private static final String TREE = "트리";
     private static final String STAR = "별";
     private static final String NOT_APPLICABLE = "없음";
-    private String badgeName;
+    private final String badgeName;
 
     private Badge(String badgeName) {
         this.badgeName = badgeName;

@@ -3,6 +3,7 @@ package christmas.utils;
 public enum PromotionRules {
     MINIMUN_PRICE(10_000),
     MAXIMUM_AMOUNT(20),
+    MINIMUM_AMOUNT(1),
     START_DATE(1),
     END_DATE(31),
     CHRISTMAS_DATE(25),
@@ -16,9 +17,7 @@ public enum PromotionRules {
     GIVEAWAY_CONDITION(120_000),
     ACCUMULATE_DISCOUNT_PRICE(100),
     DISCOUNT_START_PRICE(1_000),
-    EVENT_PERIOD_DISCOUNT(2_023),
-    GIVEAWAY_PRICE(25_000);
-
+    EVENT_PERIOD_DISCOUNT(2_023);
 
     private final int value;
 

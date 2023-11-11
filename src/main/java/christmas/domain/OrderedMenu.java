@@ -1,5 +1,7 @@
 package christmas.domain;
 
+import christmas.utils.PromotionRules;
+
 public class OrderedMenu {
     private static final String INVALID_ORDER_MESSAGE = "[ERROR] 유효하지 않은 주문입니다. 다시 입력해 주세요.";
     private final Menu menuName;
@@ -25,7 +27,7 @@ public class OrderedMenu {
     }
 
     private static void validateAmount(int amounts) {
-        if (amounts < 1) {
+        if (amounts < PromotionRules.MINIMUM_AMOUNT.getValue()) {
             throw new IllegalArgumentException(INVALID_ORDER_MESSAGE);
         }
     }
