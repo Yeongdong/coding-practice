@@ -17,13 +17,6 @@ public class OrderedMenu {
         return new OrderedMenu(menuName, orderCount);
     }
 
-//    private static Menu findMenuByName(Menu menuName) {
-//        return Arrays.stream(Menu.values())
-//                .filter(menu -> menu.getName().equals(menuName))
-//                .findFirst()
-//                .orElseThrow(() -> new IllegalArgumentException(INVALID_ORDER_MESSAGE));
-//    }
-
     private static void validateOrderCount(int orderCount) {
         if (orderCount < PromotionRules.MINIMUM_ORDER_COUNT.getValue()) {
             throw new IllegalArgumentException(INVALID_ORDER_MESSAGE);
@@ -32,6 +25,10 @@ public class OrderedMenu {
 
     public Menu getMenu() {
         return menu;
+    }
+
+    public int getPrice() {
+        return menu.getPrice();
     }
 
     public String getMenuName() {

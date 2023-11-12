@@ -7,15 +7,15 @@ import christmas.view.OutputView;
 
 public class PromotionOrder {
     public static void order() {
-        Customer customer = Customer.from(InputView.inputVisitDate(), InputView.inputMenuAndOrderCount());
+        Customer customer = Customer.reserve(InputView.inputVisitDate(), InputView.inputMenuAndOrderCount());
         OutputView.printPreviewBenefit(customer);
         OutputView.printOrderedMenus(customer);
         OutputView.printTotalPriceBeforeDiscount(customer);
-        Benefits benefits = Benefits.from(customer.getEstimateVisitDate(), customer.getOrderedMenus());
+        Benefits benefits = Benefits.from(customer);
         OutputView.printGiveawayMenu(benefits);
         OutputView.printBenefits(benefits);
         OutputView.printTotalBenefit(benefits);
-        OutputView.printEstimatePrice(benefits, customer.getOrderedMenus());
+        OutputView.printEstimatePrice(benefits, customer);
         OutputView.printEventBadge(customer, benefits);
     }
 }

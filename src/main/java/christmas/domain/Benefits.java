@@ -12,36 +12,36 @@ public class Benefits {
         this.benefits = benefits;
     }
 
-    public static Benefits from(EventDate eventDate, OrderedMenus orderedMenus) {
-        if (OrderedMenus.canGetBenefit(orderedMenus) && !OrderedMenus.hasOnlyBeverage(orderedMenus)) {
-            Map<String, Integer> benefits = checkEvent(eventDate, orderedMenus);
+    public static Benefits from(Customer customer) {
+        if (customer.canGetBenefit() && !customer.hasOnlyBeverage()) {
+            Map<String, Integer> benefits = checkEvent(customer);
             return new Benefits(benefits);
         }
         return new Benefits(Collections.emptyMap());
     }
 
-    private static Map<String, Integer> checkEvent(EventDate eventDate, OrderedMenus orderedMenus) {
+    private static Map<String, Integer> checkEvent(Customer customer) {
         Map<String, Integer> benefits = new HashMap<>();
-        List<String> eventPeriod = eventDate.eventPeriod();
+        List<String> eventPeriod = customer.getEstimateVisitDate().eventPeriod();
         for (String event : eventPeriod) {
-            int discountAmount = getDiscountAmountForEvent(eventDate, event, orderedMenus);
+            int discountAmount = getDiscountAmountForEvent(customer, event);
             benefits.put(event, discountAmount);
         }
-        if (orderedMenus.getTotalPriceBeforeDiscount() >= PromotionRules.GIVEAWAY_CONDITION.getValue()) {
+        if (customer.getTotalPriceBeforeDiscount() >= PromotionRules.GIVEAWAY_CONDITION.getValue()) {
             benefits.put(Menu.CHAMPAIGN.getName(), Menu.CHAMPAIGN.getPrice());
         }
         return benefits;
     }
 
-    private static int getDiscountAmountForEvent(EventDate eventDate, String event, OrderedMenus orderedMenus) {
+    private static int getDiscountAmountForEvent(Customer customer, String event) {
         if (Promotions.CHRISTMAS_DDAY.getPromotionName().equals(event)) {
-            return eventDate.calculateAccumulateDiscountPrice();
+            return customer.getEstimateVisitDate().calculateAccumulateDiscountPrice();
         }
         if (Promotions.WEEKDAY.getPromotionName().equals(event)) {
-            return calculateWeekDiscount(MenuCategory.DESSERT, orderedMenus);
+            return calculateWeekDiscount(MenuCategory.DESSERT, customer);
         }
         if (Promotions.WEEKEND.getPromotionName().equals(event)) {
-            return calculateWeekDiscount(MenuCategory.MAIN, orderedMenus);
+            return calculateWeekDiscount(MenuCategory.MAIN, customer);
         }
         if (Promotions.SPECIAL.getPromotionName().equals(event)) {
             return PromotionRules.STAR_DISCOUNT.getValue();
@@ -49,11 +49,11 @@ public class Benefits {
         return 0;
     }
 
-    private static int calculateWeekDiscount(MenuCategory menuCategory, OrderedMenus orderedMenus) {
+    private static int calculateWeekDiscount(MenuCategory menuCategory, Customer customer) {
         final int discount = PromotionRules.EVENT_PERIOD_DISCOUNT.getValue();
 
-        return orderedMenus.getOrderedMenus().stream()
-                .filter(orderedMenu -> OrderedMenus.orderedMenuBelongsToCategory(orderedMenu, menuCategory))
+        return customer.getOrderedMenusList().stream()
+                .filter(orderedMenu -> customer.orderedMenuBelongsToCategory(orderedMenu, menuCategory))
                 .mapToInt(OrderedMenu::getOrderCount)
                 .sum() * discount;
     }
@@ -64,12 +64,12 @@ public class Benefits {
                 .sum();
     }
 
-    public int calculateEstimatePrice(OrderedMenus orderedMenus) {
+    public int calculateEstimatePrice(Customer customer) {
         int discount = getBenefits().entrySet().stream()
                 .filter(entry -> !Menu.CHAMPAIGN.getName().equals(entry.getKey()))
                 .mapToInt(Map.Entry::getValue)
                 .sum();
-        return orderedMenus.getTotalPriceBeforeDiscount() - discount;
+        return customer.getTotalPriceBeforeDiscount() - discount;
     }
 
     public boolean isEmpty() {

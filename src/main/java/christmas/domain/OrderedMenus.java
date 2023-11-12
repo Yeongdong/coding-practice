@@ -19,24 +19,6 @@ public class OrderedMenus {
         return new OrderedMenus(orderedMenus);
     }
 
-    public int getTotalPriceBeforeDiscount() {
-        int totalPriceBeforeDiscount = 0;
-        for (int i = 0; i < getOrderedMenus().size(); i++) {
-            OrderedMenu orderedMenu = getOrderedMenus().get(i);
-            totalPriceBeforeDiscount += orderedMenu.getMenu().getPrice() * orderedMenu.getOrderCount();
-        }
-        return totalPriceBeforeDiscount;
-    }
-
-    public static boolean canGetBenefit(OrderedMenus orderedMenus) {
-        return orderedMenus.getTotalPriceBeforeDiscount() >= PromotionRules.MINIMUN_PRICE.getValue();
-    }
-
-    public static boolean hasOnlyBeverage(OrderedMenus orderedMenus) {
-        return orderedMenus.getOrderedMenus().stream()
-                .allMatch(orderedMenu -> orderedMenuBelongsToCategory(orderedMenu, MenuCategory.BEVERAGE));
-    }
-
     public List<OrderedMenu> getOrderedMenus() {
         return orderedMenus;
     }
@@ -66,12 +48,5 @@ public class OrderedMenus {
         if (menuNames.size() != orderedMenuNames.size()) {
             throw new IllegalArgumentException(INVALID_ORDER_MESSAGE);
         }
-    }
-
-    public static boolean orderedMenuBelongsToCategory(OrderedMenu orderedMenu, MenuCategory category) {
-        String menuName = orderedMenu.getMenu().getName();
-        return Arrays.stream(MenuCategory.values())
-                .anyMatch(menuCategory -> menuCategory.getMenus().stream()
-                        .anyMatch(menu -> menu.getName().equals(menuName) && menuCategory == category));
     }
 }

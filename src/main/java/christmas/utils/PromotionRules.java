@@ -1,7 +1,7 @@
 package christmas.utils;
 
 public enum PromotionRules {
-    MINIMUN_PRICE(10_000),
+    MINIMUM_PRICE(10_000),
     MAXIMUM_ORDER_COUNT(20),
     MINIMUM_ORDER_COUNT(1),
     START_DATE(1),
