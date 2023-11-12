@@ -23,23 +23,22 @@ public class OutputView {
     private static final String GIVEAWAY_FORMAT = "%s %d개";
     private static final String BENEFIT_FORMAT = "%s 할인: -%,d원";
     private static final String GIVEAWAY_EVENT = "증정 이벤트: -%,d원";
-    private static final String GIVEAWAY = "샴페인";
 
-    public static void printPreviewBenefit(EventDate eventDate) {
-        System.out.printf(PREVIEW_BENEFIT_MESSAGE, eventDate.getVisitDate());
+    public static void printPreviewBenefit(Customer customer) {
+        System.out.printf(PREVIEW_BENEFIT_MESSAGE, customer.getEstimateVisitDate().getVisitDate());
     }
 
-    public static void printOrderedMenus(OrderedMenus orderedMenus) {
+    public static void printOrderedMenus(Customer customer) {
         System.out.println(ORDERED_MENU_MESSAGE);
-        for (int i = 0; i < orderedMenus.getOrderedMenus().size(); i++) {
-            OrderedMenu orderedMenu = orderedMenus.getOrderedMenus().get(i);
-            System.out.printf(ORDERED_MENU_AND_AMOUNT, orderedMenu.getMenuName(), orderedMenu.getAmount());
+        for (int i = 0; i < customer.getOrderedMenus().getOrderedMenus().size(); i++) {
+            OrderedMenu orderedMenu = customer.getOrderedMenus().getOrderedMenus().get(i);
+            System.out.printf(ORDERED_MENU_AND_AMOUNT, orderedMenu.getMenuName(), orderedMenu.getOrderCount());
         }
     }
 
-    public static void printTotalPriceBeforeDiscount(OrderedMenus orderedMenus) {
+    public static void printTotalPriceBeforeDiscount(Customer customer) {
         System.out.println(TOTAL_PRICE_BEFORE_DISCOUNT_MESSAGE);
-        int totalPriceBeforeDiscount = orderedMenus.getTotalPriceBeforeDiscount();
+        int totalPriceBeforeDiscount = customer.getOrderedMenus().getTotalPriceBeforeDiscount();
         System.out.printf(PRICE_FORMAT, totalPriceBeforeDiscount);
     }
 
@@ -55,25 +54,29 @@ public class OutputView {
 
     public static void printTotalBenefit(Benefits benefits) {
         System.out.println(TOTAL_BENEFITS_MESSAGE);
-        System.out.printf(DISCOUNT_FORMAT, benefits.getTotalDiscount());
+        if (benefits.isEmpty()) {
+            System.out.println(NOT_APPLICABLE);
+        }if (!benefits.isEmpty()) {
+            System.out.printf(DISCOUNT_FORMAT, benefits.getTotalDiscount());
+        }
     }
 
     public static void printEstimatePrice(Benefits benefits, OrderedMenus orderedMenus) {
         System.out.println(ESTIMATED_PRICE_AFTER_DISCOUNT_MESSAGE);
-        System.out.printf(PRICE_FORMAT, benefits.calculateEstimatePrice(benefits, orderedMenus));
+        System.out.printf(PRICE_FORMAT, benefits.calculateEstimatePrice(orderedMenus));
     }
 
-    public static void printEventBadge(Benefits benefits) {
+    public static void printEventBadge(Customer customer, Benefits benefits) {
         System.out.println(DECEMBER_EVENT_BADGE_MESSAGE);
-        System.out.println(Badge.createBadge(benefits.getTotalDiscount()));
+        System.out.println(customer.getBadgeStatus(benefits));
     }
 
     private static String checkGiveaway(Benefits benefits) {
-        if (benefits.containsKey(GIVEAWAY)) {
+        if (benefits.containsKey(Menu.CHAMPAIGN.getName())) {
             int giveawayCount = (int) benefits.getBenefits().keySet().stream()
-                    .filter(key -> key.equals(GIVEAWAY))
+                    .filter(key -> key.equals(Menu.CHAMPAIGN.getName()))
                     .count();
-            return String.format(GIVEAWAY_FORMAT, GIVEAWAY, giveawayCount);
+            return String.format(GIVEAWAY_FORMAT, Menu.CHAMPAIGN.getName(), giveawayCount);
         }
         return NOT_APPLICABLE;
     }
@@ -85,15 +88,15 @@ public class OutputView {
         }
         Set<String> filteredKeys = filterGiveaway(benefits);
         addFilteredBenefitsToResult(benefits, filteredKeys, result);
-        if (benefits.containsKey(GIVEAWAY)) {
-            result.add(String.format(GIVEAWAY_EVENT, Menu.valueOf(GIVEAWAY).getPrice()));
+        if (benefits.containsKey(Menu.CHAMPAIGN.getName())) {
+            result.add(String.format(GIVEAWAY_EVENT, Menu.CHAMPAIGN.getPrice()));
         }
         return String.join("\n", result);
     }
 
     private static Set<String> filterGiveaway(Benefits benefits) {
         return benefits.getBenefits().keySet().stream()
-                .filter(key -> !GIVEAWAY.equals(key))
+                .filter(key -> !Menu.CHAMPAIGN.getName().equals(key))
                 .collect(Collectors.toSet());
     }
 

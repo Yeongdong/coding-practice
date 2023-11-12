@@ -7,7 +7,6 @@ import java.util.*;
 
 public class Benefits {
     private final Map<String, Integer> benefits;
-    private static final String GIVEAWAY = "샴페인";
 
     private Benefits(Map<String, Integer> benefits) {
         this.benefits = benefits;
@@ -29,7 +28,7 @@ public class Benefits {
             benefits.put(event, discountAmount);
         }
         if (orderedMenus.getTotalPriceBeforeDiscount() >= PromotionRules.GIVEAWAY_CONDITION.getValue()) {
-            benefits.put(Menu.valueOf(GIVEAWAY).name(), Menu.valueOf(GIVEAWAY).getPrice());
+            benefits.put(Menu.CHAMPAIGN.getName(), Menu.CHAMPAIGN.getPrice());
         }
         return benefits;
     }
@@ -55,10 +54,9 @@ public class Benefits {
 
         return orderedMenus.getOrderedMenus().stream()
                 .filter(orderedMenu -> OrderedMenus.orderedMenuBelongsToCategory(orderedMenu, menuCategory))
-                .mapToInt(OrderedMenu::getAmount)
+                .mapToInt(OrderedMenu::getOrderCount)
                 .sum() * discount;
     }
-
 
     public int getTotalDiscount() {
         return benefits.values().stream()
@@ -66,9 +64,9 @@ public class Benefits {
                 .sum();
     }
 
-    public int calculateEstimatePrice(Benefits benefits, OrderedMenus orderedMenus) {
+    public int calculateEstimatePrice(OrderedMenus orderedMenus) {
         int discount = getBenefits().entrySet().stream()
-                .filter(entry -> !GIVEAWAY.equals(entry.getKey()))
+                .filter(entry -> !Menu.CHAMPAIGN.getName().equals(entry.getKey()))
                 .mapToInt(Map.Entry::getValue)
                 .sum();
         return orderedMenus.getTotalPriceBeforeDiscount() - discount;

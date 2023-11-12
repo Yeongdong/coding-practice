@@ -12,10 +12,10 @@ public class OrderedMenus {
         this.orderedMenus = orderedMenus;
     }
 
-    public static OrderedMenus from(List<String> orderedMenuNames, List<Integer> amounts) {
+    public static OrderedMenus from(List<Menu> orderedMenuNames, List<Integer> orderCounts) {
         validateDuplicates(orderedMenuNames);
-        validateTotalAmount(getTotalAmount(amounts));
-        List<OrderedMenu> orderedMenus = createOrder(orderedMenuNames, amounts);
+        validateTotalOrderCount(getTotalOrderCount(orderCounts));
+        List<OrderedMenu> orderedMenus = createOrder(orderedMenuNames, orderCounts);
         return new OrderedMenus(orderedMenus);
     }
 
@@ -23,7 +23,7 @@ public class OrderedMenus {
         int totalPriceBeforeDiscount = 0;
         for (int i = 0; i < getOrderedMenus().size(); i++) {
             OrderedMenu orderedMenu = getOrderedMenus().get(i);
-            totalPriceBeforeDiscount += orderedMenu.getMenuName().getPrice() * orderedMenu.getAmount();
+            totalPriceBeforeDiscount += orderedMenu.getMenu().getPrice() * orderedMenu.getOrderCount();
         }
         return totalPriceBeforeDiscount;
     }
@@ -41,35 +41,35 @@ public class OrderedMenus {
         return orderedMenus;
     }
 
-    private static List<OrderedMenu> createOrder(List<String> orderedMenuNames, List<Integer> amounts) {
+    private static List<OrderedMenu> createOrder(List<Menu> orderedMenuNames, List<Integer> orderCounts) {
         List<OrderedMenu> orderedMenus = new ArrayList<>();
         for (int i = 0; i < orderedMenuNames.size(); i++) {
-            orderedMenus.add(OrderedMenu.from(orderedMenuNames.get(i), amounts.get(i)));
+            orderedMenus.add(OrderedMenu.from(orderedMenuNames.get(i), orderCounts.get(i)));
         }
         return orderedMenus;
     }
 
-    private static int getTotalAmount(List<Integer> amounts) {
-        return amounts.stream()
+    private static int getTotalOrderCount(List<Integer> orderCounts) {
+        return orderCounts.stream()
                 .mapToInt(Integer::intValue)
                 .sum();
     }
 
-    private static void validateTotalAmount(int totalAmount) {
-        if (totalAmount > PromotionRules.MAXIMUM_AMOUNT.getValue()) {
+    private static void validateTotalOrderCount(int totalOrderCount) {
+        if (totalOrderCount > PromotionRules.MAXIMUM_ORDER_COUNT.getValue()) {
             throw new IllegalArgumentException(INVALID_ORDER_MESSAGE);
         }
     }
 
-    private static void validateDuplicates(List<String> orderedMenuNames) {
-        Set<String> menuNames = new HashSet<>(orderedMenuNames);
+    private static void validateDuplicates(List<Menu> orderedMenuNames) {
+        Set<Menu> menuNames = new HashSet<>(orderedMenuNames);
         if (menuNames.size() != orderedMenuNames.size()) {
             throw new IllegalArgumentException(INVALID_ORDER_MESSAGE);
         }
     }
 
     public static boolean orderedMenuBelongsToCategory(OrderedMenu orderedMenu, MenuCategory category) {
-        String menuName = orderedMenu.getMenuName().getName();
+        String menuName = orderedMenu.getMenu().getName();
         return Arrays.stream(MenuCategory.values())
                 .anyMatch(menuCategory -> menuCategory.getMenus().stream()
                         .anyMatch(menu -> menu.getName().equals(menuName) && menuCategory == category));

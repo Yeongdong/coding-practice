@@ -13,17 +13,17 @@ public enum Badge {
         this.badgeName = badgeName;
     }
 
-    public static String createBadge(int totalDiscount) {
+    public static Badge from(int totalDiscount) {
         if (totalDiscount >= PromotionRules.TOTAL_BENEFIT_20000.getValue())
-            return SANTA.getBadgeName();
+            return SANTA;
         if (totalDiscount >= PromotionRules.TOTAL_BENEFIT_10000.getValue())
-            return TREE.getBadgeName();
+            return TREE;
         if (totalDiscount >= PromotionRules.TOTAL_BENEFIT_5000.getValue())
-            return STAR.getBadgeName();
-        return NOT_APPLICABLE.getBadgeName();
+            return STAR;
+        return NOT_APPLICABLE;
     }
 
-    private String getBadgeName() {
+    public String getBadgeName() {
         return badgeName;
     }
 }

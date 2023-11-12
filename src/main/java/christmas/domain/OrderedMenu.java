@@ -4,39 +4,41 @@ import christmas.utils.PromotionRules;
 
 public class OrderedMenu {
     private static final String INVALID_ORDER_MESSAGE = "[ERROR] 유효하지 않은 주문입니다. 다시 입력해 주세요.";
-    private final Menu menuName;
-    private final int amount;
+    private final Menu menu;
+    private final int orderCount;
 
-    private OrderedMenu(Menu menuName, int amount) {
-        this.menuName = menuName;
-        this.amount = amount;
+    private OrderedMenu(Menu menuName, int orderCount) {
+        this.menu = menuName;
+        this.orderCount = orderCount;
     }
 
-    public static OrderedMenu from(String menuName, int amount) {
-        validateInMenu(menuName);
-        validateAmount(amount);
-        return new OrderedMenu(Menu.valueOf(menuName), amount);
+    public static OrderedMenu from(Menu menuName, int orderCount) {
+        validateOrderCount(orderCount);
+        return new OrderedMenu(menuName, orderCount);
     }
 
-    private static void validateInMenu(String menuName) {
-        try {
-            Menu.valueOf(menuName);
-        } catch (IllegalArgumentException e) {
+//    private static Menu findMenuByName(Menu menuName) {
+//        return Arrays.stream(Menu.values())
+//                .filter(menu -> menu.getName().equals(menuName))
+//                .findFirst()
+//                .orElseThrow(() -> new IllegalArgumentException(INVALID_ORDER_MESSAGE));
+//    }
+
+    private static void validateOrderCount(int orderCount) {
+        if (orderCount < PromotionRules.MINIMUM_ORDER_COUNT.getValue()) {
             throw new IllegalArgumentException(INVALID_ORDER_MESSAGE);
         }
     }
 
-    private static void validateAmount(int amounts) {
-        if (amounts < PromotionRules.MINIMUM_AMOUNT.getValue()) {
-            throw new IllegalArgumentException(INVALID_ORDER_MESSAGE);
-        }
+    public Menu getMenu() {
+        return menu;
     }
 
-    public Menu getMenuName() {
-        return menuName;
+    public String getMenuName() {
+        return menu.getName();
     }
 
-    public int getAmount() {
-        return amount;
+    public int getOrderCount() {
+        return orderCount;
     }
 }
