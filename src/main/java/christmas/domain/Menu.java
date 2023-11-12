@@ -1,32 +1,32 @@
 package christmas.domain;
 
 public enum Menu {
-    양송이수프(6_000, MenuCategory.APPETIZER),
-    타파스(5_500, MenuCategory.APPETIZER),
-    시저샐러드(8_000, MenuCategory.APPETIZER),
-    티본스테이크(55_000, MenuCategory.MAIN),
-    바비큐립(54_000, MenuCategory.MAIN),
-    해산물파스타(35_000, MenuCategory.MAIN),
-    크리스마스파스타(25_000, MenuCategory.MAIN),
-    초코케이크(15_000, MenuCategory.DESSERT),
-    아이스크림(5_000, MenuCategory.DESSERT),
-    제로콜라(3_000, MenuCategory.BEVERAGE),
-    레드와인(60_000, MenuCategory.BEVERAGE),
-    샴페인(25_000, MenuCategory.BEVERAGE);
+    MUSHROOM_SOUP("양송이수프", 6_000),
+    TAPAS("타파스", 5_500),
+    CAESAR_SALAD("시저샐러드", 8_000),
+    T_BONE_STEAK("티본스테이크", 55_000),
+    BBQ_RIB("바비큐립", 54_000),
+    SEAFOOD_PASTA("해산물파스타", 35_000),
+    CHRISTMAS_PASTA("크리스마스파스타", 25_000),
+    CHOCOLATE_CAKE("초코케이크", 15_000),
+    ICECREAM("아이스크림", 5_000),
+    COKE_ZERO("제로콜라", 3_000),
+    RED_WINE("레드와인", 60_000),
+    CHAMPAIGN("샴페인", 25_000);
 
+    private final String name;
     private final int price;
-    private final MenuCategory menuCategory;
 
-    Menu(int price, MenuCategory menuCategory) {
+    Menu(String name, int price) {
+        this.name = name;
         this.price = price;
-        this.menuCategory = menuCategory;
+    }
+
+    public String getName() {
+        return name;
     }
 
     public int getPrice() {
         return price;
-    }
-
-    public MenuCategory getMenuCategory() {
-        return menuCategory;
     }
 }

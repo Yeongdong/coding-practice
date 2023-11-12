@@ -2,27 +2,21 @@ package christmas.domain;
 
 import christmas.utils.PromotionRules;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 public class OrderedMenus {
     private static final String INVALID_ORDER_MESSAGE = "[ERROR] 유효하지 않은 주문입니다. 다시 입력해 주세요.";
     private final List<OrderedMenu> orderedMenus;
-    private static int totalAmount;
 
-
-    private OrderedMenus(List<OrderedMenu> orderedMenus, int totalAmount) {
+    private OrderedMenus(List<OrderedMenu> orderedMenus) {
         this.orderedMenus = orderedMenus;
-        this.totalAmount = totalAmount;
     }
 
     public static OrderedMenus from(List<String> orderedMenuNames, List<Integer> amounts) {
         validateDuplicates(orderedMenuNames);
         validateTotalAmount(getTotalAmount(amounts));
         List<OrderedMenu> orderedMenus = createOrder(orderedMenuNames, amounts);
-        return new OrderedMenus(orderedMenus, getTotalAmount(amounts));
+        return new OrderedMenus(orderedMenus);
     }
 
     public int getTotalPriceBeforeDiscount() {
@@ -40,7 +34,7 @@ public class OrderedMenus {
 
     public static boolean hasOnlyBeverage(OrderedMenus orderedMenus) {
         return orderedMenus.getOrderedMenus().stream()
-                .allMatch(orderedMenu -> orderedMenu.getMenuName().getMenuCategory() == MenuCategory.BEVERAGE);
+                .allMatch(orderedMenu -> orderedMenuBelongsToCategory(orderedMenu, MenuCategory.BEVERAGE));
     }
 
     public List<OrderedMenu> getOrderedMenus() {
@@ -56,8 +50,9 @@ public class OrderedMenus {
     }
 
     private static int getTotalAmount(List<Integer> amounts) {
-        totalAmount = amounts.stream().mapToInt(Integer::intValue).sum();
-        return totalAmount;
+        return amounts.stream()
+                .mapToInt(Integer::intValue)
+                .sum();
     }
 
     private static void validateTotalAmount(int totalAmount) {
@@ -71,5 +66,12 @@ public class OrderedMenus {
         if (menuNames.size() != orderedMenuNames.size()) {
             throw new IllegalArgumentException(INVALID_ORDER_MESSAGE);
         }
+    }
+
+    public static boolean orderedMenuBelongsToCategory(OrderedMenu orderedMenu, MenuCategory category) {
+        String menuName = orderedMenu.getMenuName().getName();
+        return Arrays.stream(MenuCategory.values())
+                .anyMatch(menuCategory -> menuCategory.getMenus().stream()
+                        .anyMatch(menu -> menu.getName().equals(menuName) && menuCategory == category));
     }
 }
