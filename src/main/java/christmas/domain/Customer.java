@@ -20,7 +20,7 @@ public class Customer {
 
     public int getTotalPriceBeforeDiscount() {
         return getOrderedMenusList().stream()
-                .mapToInt(orderedMenu -> orderedMenu.getPrice())
+                .mapToInt(OrderedMenu::getPrice)
                 .sum();
     }
 
