@@ -16,12 +16,12 @@ public class OutputView {
     private static final String DISCOUNT_FORMAT = "-%,d원\n";
     private static final String GIVEAWAY_MENU_MESSAGE = "\n<증정 메뉴>";
     private static final String BENEFITS_MESSAGE = "\n<혜택 내역>";
-    private static final String TOTAL_BENEFITS_MESSAGE = "\n<총혜택 금액>";
+    private static final String TOTAL_BENEFITS_MESSAGE = "<총혜택 금액>";
     private static final String ESTIMATED_PRICE_AFTER_DISCOUNT_MESSAGE = "\n<할인 후 예상 결제 금액>";
     private static final String DECEMBER_EVENT_BADGE_MESSAGE = "\n<12월 이벤트 배지>";
     private static final String NOT_APPLICABLE = "없음";
     private static final String BENEFIT_FORMAT = "%s 할인: ";
-    private static final String GIVEAWAY_EVENT = "증정 이벤트: -%,d원";
+    private static final String GIVEAWAY_EVENT = "증정 이벤트: -%,d원\n";
 
     public static void printPreviewBenefit(Customer customer) {
         System.out.printf(PREVIEW_BENEFIT_MESSAGE, customer.getVisitDate());
@@ -96,7 +96,7 @@ public class OutputView {
 
     private static Set<String> filterGiveaway(Benefits benefits) {
         return benefits.getBenefits().keySet().stream()
-                .filter(key -> !Menu.CHAMPAIGN.getName().equals(key))
+                .filter(key -> !Menu.CHAMPAIGN.getName().equals(key) && benefits.getBenefits().get(key) > 0)
                 .collect(Collectors.toSet());
     }
 

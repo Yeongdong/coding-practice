@@ -13,7 +13,7 @@ public class Benefits {
     }
 
     public static Benefits from(Customer customer) {
-        if (customer.isParticipateInPromotion()) {
+        if (customer.canGetBenefit()) {
             Map<String, Integer> benefits = checkEvent(customer);
             return new Benefits(benefits);
         }
@@ -50,8 +50,8 @@ public class Benefits {
         Map<String, Integer> benefits = new HashMap<>();
         List<String> eventPeriod = customer.getEventPeriod();
         for (String event : eventPeriod) {
-            int discountAmount = getDiscountAmountForEvent(customer, event);
-            benefits.put(event, discountAmount);
+            int discountPrice = getDiscountPriceForEvent(customer, event);
+            benefits.put(event, discountPrice);
         }
         if (customer.getTotalPriceBeforeDiscount() >= PromotionRules.GIVEAWAY_CONDITION.getValue()) {
             benefits.put(Menu.CHAMPAIGN.getName(), Menu.CHAMPAIGN.getPrice());
@@ -59,7 +59,7 @@ public class Benefits {
         return benefits;
     }
 
-    private static int getDiscountAmountForEvent(Customer customer, String event) {
+    private static int getDiscountPriceForEvent(Customer customer, String event) {
         if (Promotions.CHRISTMAS_DDAY.getPromotionName().equals(event)) {
             return customer.getChristmasDiscountPrice();
         }
@@ -78,7 +78,7 @@ public class Benefits {
     private static int calculateWeekDiscount(MenuCategory menuCategory, Customer customer) {
         final int discount = PromotionRules.EVENT_PERIOD_DISCOUNT.getValue();
         return customer.getOrderedMenusList().stream()
-                .filter(orderedMenu -> OrderedMenus.orderedMenuBelongsToCategory(orderedMenu, menuCategory))
+                .filter(orderedMenu -> OrderedMenus.isInMenuCategory(orderedMenu.getMenu(), menuCategory))
                 .mapToInt(OrderedMenu::getOrderCount)
                 .sum() * discount;
     }

@@ -29,14 +29,6 @@ public class InputView {
         }
     }
 
-    private static int toInt(String input) {
-        try {
-            return Integer.parseInt(input);
-        } catch (NumberFormatException e) {
-            throw new IllegalArgumentException(INVALID_DATE_MESSAGE);
-        }
-    }
-
     public static OrderedMenus inputMenuAndOrderCount() {
         try {
             System.out.println(MENU_AND_ORDER_COUNT);
@@ -63,6 +55,14 @@ public class InputView {
             return OrderedMenus.from(menuNames, orderCount);
         } catch (NumberFormatException e) {
             throw new IllegalArgumentException(INVALID_ORDER_MESSAGE);
+        }
+    }
+
+    private static int toInt(String input) {
+        try {
+            return Integer.parseInt(input);
+        } catch (NumberFormatException e) {
+            throw new IllegalArgumentException(INVALID_DATE_MESSAGE);
         }
     }
 

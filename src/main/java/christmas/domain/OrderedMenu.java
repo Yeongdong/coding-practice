@@ -35,7 +35,7 @@ public class OrderedMenu {
         return orderCount;
     }
 
-    private Menu getMenu() {
+    public Menu getMenu() {
         return menu;
     }
 }

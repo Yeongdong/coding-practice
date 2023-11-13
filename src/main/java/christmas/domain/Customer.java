@@ -20,17 +20,13 @@ public class Customer {
 
     public int getTotalPriceBeforeDiscount() {
         return getOrderedMenusList().stream()
-                .mapToInt(orderedMenu -> orderedMenu.getPrice() * orderedMenu.getOrderCount())
+                .mapToInt(orderedMenu -> orderedMenu.getPrice())
                 .sum();
     }
 
     public String getBadgeStatus(Benefits benefits) {
         this.badge = Badge.from(benefits.getTotalDiscount());
         return badge.getBadgeName();
-    }
-
-    public boolean isParticipateInPromotion() {
-        return canGetBenefit() && !getOrderedMenus().hasOnlyBeverage();
     }
 
     public List<String> getEventPeriod() {
@@ -49,7 +45,7 @@ public class Customer {
         return getEstimateVisitDate().getVisitDate();
     }
 
-    private boolean canGetBenefit() {
+    public boolean canGetBenefit() {
         return getTotalPriceBeforeDiscount() >= PromotionRules.MINIMUM_PRICE.getValue();
     }
 

@@ -19,13 +19,8 @@ public class OrderedMenus {
         return new OrderedMenus(orderedMenus);
     }
 
-    public boolean hasOnlyBeverage() {
-        return getOrderedMenus().stream()
-                .allMatch(orderedMenu -> orderedMenuBelongsToCategory(orderedMenu, MenuCategory.BEVERAGE));
-    }
-
-    public static boolean orderedMenuBelongsToCategory(OrderedMenu orderedMenu, MenuCategory category) {
-        String menuName = orderedMenu.getMenuName();
+    public static boolean isInMenuCategory(Menu orderedMenu, MenuCategory category) {
+        String menuName = orderedMenu.getName();
         return Arrays.stream(MenuCategory.values())
                 .anyMatch(menuCategory -> menuCategory.getMenus().stream()
                         .anyMatch(menu -> menu.getName().equals(menuName) && menuCategory == category));
@@ -45,6 +40,7 @@ public class OrderedMenus {
         validateDuplicates(orderedMenuNames);
         validateTotalOrderCount(orderCounts);
         validateInMenu(orderedMenuNames);
+        validateMenusNotOnlyBeverage(orderedMenuNames, MenuCategory.BEVERAGE);
     }
 
     private static void validateTotalOrderCount(List<Integer> orderCounts) {
@@ -68,6 +64,13 @@ public class OrderedMenus {
             if (Menu.findByName(menuName) == null) {
                 throw new IllegalArgumentException(INVALID_ORDER_MESSAGE);
             }
+        }
+    }
+
+    private static void validateMenusNotOnlyBeverage(List<String> orderedMenuNames, MenuCategory menuCategory) {
+        if (orderedMenuNames.stream()
+                .allMatch(menuName -> isInMenuCategory(Menu.findByName(menuName), menuCategory))) {
+            throw new IllegalArgumentException(INVALID_ORDER_MESSAGE);
         }
     }
 }
