@@ -23,19 +23,19 @@ public class OrderedMenu {
         }
     }
 
-    public Menu getMenu() {
-        return menu;
-    }
-
     public int getPrice() {
-        return menu.getPrice();
+        return getMenu().getPrice() * getOrderCount();
     }
 
     public String getMenuName() {
-        return menu.getName();
+        return getMenu().getName();
     }
 
     public int getOrderCount() {
         return orderCount;
+    }
+
+    private Menu getMenu() {
+        return menu;
     }
 }

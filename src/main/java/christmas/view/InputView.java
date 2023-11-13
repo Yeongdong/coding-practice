@@ -2,7 +2,6 @@ package christmas.view;
 
 import camp.nextstep.edu.missionutils.Console;
 import christmas.domain.EventDate;
-import christmas.domain.Menu;
 import christmas.domain.OrderedMenus;
 import christmas.utils.PromotionRules;
 
@@ -61,16 +60,10 @@ public class InputView {
                 menuNames.add(menus[PromotionRules.MENU_ORDER.getValue()]);
                 orderCount.add(Integer.parseInt(menus[PromotionRules.COUNT_ORDER.getValue()]));
             }
-            return OrderedMenus.from(toMenuList(menuNames), orderCount);
+            return OrderedMenus.from(menuNames, orderCount);
         } catch (NumberFormatException e) {
             throw new IllegalArgumentException(INVALID_ORDER_MESSAGE);
         }
-    }
-
-    private static List<Menu> toMenuList(List<String> menuNames) {
-        return menuNames.stream()
-                .map(Menu::findByName)
-                .toList();
     }
 
     private static void validateInputForm(String[] menus) {

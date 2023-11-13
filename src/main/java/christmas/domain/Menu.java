@@ -36,6 +36,6 @@ public enum Menu {
         return Arrays.stream(Menu.values())
                 .filter(menu -> menu.getName().equals(name))
                 .findFirst()
-                .orElseThrow(() -> new IllegalArgumentException("No such menu with name: " + name));
+                .orElse(null);
     }
 }

@@ -17,7 +17,7 @@ public class EventDate {
     private static final String INVALID_DATE_MESSAGE = "[ERROR] 유효하지 않은 날짜입니다. 다시 입력해 주세요.";
     private final int visitDate;
 
-    public EventDate(int visitDate) {
+    private EventDate(int visitDate) {
         this.visitDate = visitDate;
     }
 
@@ -48,7 +48,10 @@ public class EventDate {
     }
 
     public int calculateAccumulateDiscountPrice() {
-        return PromotionRules.DISCOUNT_START_PRICE.getValue() + (visitDate - 1) * PromotionRules.ACCUMULATE_DISCOUNT_PRICE.getValue();
+        if (getVisitDate() >= 1 && getVisitDate() <= 25) {
+            return PromotionRules.DISCOUNT_START_PRICE.getValue() + (getVisitDate() - 1) * PromotionRules.ACCUMULATE_DISCOUNT_PRICE.getValue();
+        }
+        return 0;
     }
 
     public int getVisitDate() {

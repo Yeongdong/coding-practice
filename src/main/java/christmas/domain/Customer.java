@@ -2,7 +2,6 @@ package christmas.domain;
 
 import christmas.utils.PromotionRules;
 
-import java.util.Arrays;
 import java.util.List;
 
 public class Customer {
@@ -19,16 +18,10 @@ public class Customer {
         return new Customer(visitDate, orderedMenus);
     }
 
-    public EventDate getEstimateVisitDate() {
-        return estimateVisitDate;
-    }
-
-    public int getVisitDate() {
-        return estimateVisitDate.getVisitDate();
-    }
-
-    public List<OrderedMenu> getOrderedMenusList() {
-        return orderedMenus.getOrderedMenus();
+    public int getTotalPriceBeforeDiscount() {
+        return getOrderedMenusList().stream()
+                .mapToInt(orderedMenu -> orderedMenu.getPrice() * orderedMenu.getOrderCount())
+                .sum();
     }
 
     public String getBadgeStatus(Benefits benefits) {
@@ -36,25 +29,35 @@ public class Customer {
         return badge.getBadgeName();
     }
 
-    public int getTotalPriceBeforeDiscount() {
-        return getOrderedMenusList().stream()
-                .mapToInt(orderedMenu -> orderedMenu.getPrice() * orderedMenu.getOrderCount())
-                .sum();
+    public boolean isParticipateInPromotion() {
+        return canGetBenefit() && !getOrderedMenus().hasOnlyBeverage();
     }
 
-    public boolean canGetBenefit() {
+    public List<String> getEventPeriod() {
+        return getEstimateVisitDate().eventPeriod();
+    }
+
+    public int getChristmasDiscountPrice() {
+        return getEstimateVisitDate().calculateAccumulateDiscountPrice();
+    }
+
+    public List<OrderedMenu> getOrderedMenusList() {
+        return getOrderedMenus().getOrderedMenus();
+    }
+
+    public int getVisitDate() {
+        return getEstimateVisitDate().getVisitDate();
+    }
+
+    private boolean canGetBenefit() {
         return getTotalPriceBeforeDiscount() >= PromotionRules.MINIMUM_PRICE.getValue();
     }
 
-    public boolean hasOnlyBeverage() {
-        return orderedMenus.getOrderedMenus().stream()
-                .allMatch(orderedMenu -> orderedMenuBelongsToCategory(orderedMenu, MenuCategory.BEVERAGE));
+    private OrderedMenus getOrderedMenus() {
+        return orderedMenus;
     }
 
-    public boolean orderedMenuBelongsToCategory(OrderedMenu orderedMenu, MenuCategory category) {
-        String menuName = orderedMenu.getMenu().getName();
-        return Arrays.stream(MenuCategory.values())
-                .anyMatch(menuCategory -> menuCategory.getMenus().stream()
-                        .anyMatch(menu -> menu.getName().equals(menuName) && menuCategory == category));
+    private EventDate getEstimateVisitDate() {
+        return estimateVisitDate;
     }
 }

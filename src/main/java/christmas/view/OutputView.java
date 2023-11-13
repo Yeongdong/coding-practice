@@ -10,12 +10,12 @@ import java.util.stream.Collectors;
 public class OutputView {
     private static final String PREVIEW_BENEFIT_MESSAGE = "12월 %d일에 우테코 식당에서 받을 이벤트 혜택 미리 보기!\n";
     private static final String ORDERED_MENU_MESSAGE = "\n<주문 메뉴>";
-    private static final String MENU_AND_ORDER_COUNT_FORMAT = "%s %d개\n";
+    private static final String MENU_AND_ORDER_COUNT_FORMAT = "%s %d개";
     private static final String TOTAL_PRICE_BEFORE_DISCOUNT_MESSAGE = "\n<할인 전 총주문 금액>";
     private static final String PRICE_FORMAT = "%,d원\n";
     private static final String DISCOUNT_FORMAT = "-%,d원\n";
     private static final String GIVEAWAY_MENU_MESSAGE = "\n<증정 메뉴>";
-    private static final String BENEFITS_MESSAGE = "<혜택 내역>";
+    private static final String BENEFITS_MESSAGE = "\n<혜택 내역>";
     private static final String TOTAL_BENEFITS_MESSAGE = "\n<총혜택 금액>";
     private static final String ESTIMATED_PRICE_AFTER_DISCOUNT_MESSAGE = "\n<할인 후 예상 결제 금액>";
     private static final String DECEMBER_EVENT_BADGE_MESSAGE = "\n<12월 이벤트 배지>";
@@ -32,6 +32,7 @@ public class OutputView {
         for (int i = 0; i < customer.getOrderedMenusList().size(); i++) {
             OrderedMenu orderedMenu = customer.getOrderedMenusList().get(i);
             System.out.printf(MENU_AND_ORDER_COUNT_FORMAT, orderedMenu.getMenuName(), orderedMenu.getOrderCount());
+            System.out.println();
         }
     }
 
@@ -53,7 +54,7 @@ public class OutputView {
     public static void printTotalBenefit(Benefits benefits) {
         System.out.println(TOTAL_BENEFITS_MESSAGE);
         if (benefits.isEmpty()) {
-            System.out.println(PRICE_FORMAT);
+            System.out.printf(PRICE_FORMAT, 0);
         }
         if (!benefits.isEmpty()) {
             System.out.printf(DISCOUNT_FORMAT, benefits.getTotalDiscount());
