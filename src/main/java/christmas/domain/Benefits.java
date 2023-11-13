@@ -20,19 +20,6 @@ public class Benefits {
         return new Benefits(Collections.emptyMap());
     }
 
-    private static Map<String, Integer> checkEvent(Customer customer) {
-        Map<String, Integer> benefits = new HashMap<>();
-        List<String> eventPeriod = customer.getEventPeriod();
-        for (String event : eventPeriod) {
-            int discountAmount = getDiscountAmountForEvent(customer, event);
-            benefits.put(event, discountAmount);
-        }
-        if (customer.getTotalPriceBeforeDiscount() >= PromotionRules.GIVEAWAY_CONDITION.getValue()) {
-            benefits.put(Menu.CHAMPAIGN.getName(), Menu.CHAMPAIGN.getPrice());
-        }
-        return benefits;
-    }
-
     public int getTotalDiscount() {
         return benefits.values().stream()
                 .mapToInt(Integer::intValue)
@@ -56,6 +43,19 @@ public class Benefits {
     }
 
     public Map<String, Integer> getBenefits() {
+        return benefits;
+    }
+
+    private static Map<String, Integer> checkEvent(Customer customer) {
+        Map<String, Integer> benefits = new HashMap<>();
+        List<String> eventPeriod = customer.getEventPeriod();
+        for (String event : eventPeriod) {
+            int discountAmount = getDiscountAmountForEvent(customer, event);
+            benefits.put(event, discountAmount);
+        }
+        if (customer.getTotalPriceBeforeDiscount() >= PromotionRules.GIVEAWAY_CONDITION.getValue()) {
+            benefits.put(Menu.CHAMPAIGN.getName(), Menu.CHAMPAIGN.getPrice());
+        }
         return benefits;
     }
 
