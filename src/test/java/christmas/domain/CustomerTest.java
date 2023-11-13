@@ -8,6 +8,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 class CustomerTest {
 
@@ -18,17 +19,18 @@ class CustomerTest {
         List<Integer> orderCounts = Arrays.asList(2, 3);
         OrderedMenus orderedMenuList = OrderedMenus.from(orderedMenus, orderCounts);
         Customer customer = Customer.reserve(EventDate.from(25), orderedMenuList);
-        assertThat(customer.isParticipateInPromotion()).isTrue();
+        assertThat(customer.canGetBenefit()).isTrue();
     }
 
-    @DisplayName("음료만 주문한 경우 참여 실패를 반환한다.")
+    @DisplayName("음료만 주문한 경우 주문 실패를 반환한다.")
     @Test
     void hasOnlyBeverageFail() {
         List<String> orderedMenus = Arrays.asList(Menu.COKE_ZERO.getName(), Menu.RED_WINE.getName());
         List<Integer> orderCounts = Arrays.asList(2, 3);
-        OrderedMenus orderedMenuList = OrderedMenus.from(orderedMenus, orderCounts);
-        Customer customer = Customer.reserve(EventDate.from(25), orderedMenuList);
-        assertThat(customer.isParticipateInPromotion()).isFalse();
+
+        assertThatThrownBy(() -> OrderedMenus.from(orderedMenus, orderCounts))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessageContaining("[ERROR] 유효하지 않은 주문입니다.");
     }
 
     @DisplayName("크리스마스 디데이 이벤트 기간에 참여할 경우 할인 금액을 반환한다.")
@@ -57,7 +59,7 @@ class CustomerTest {
         assertThat(accumulateDiscountPrice).isEqualTo(0);
     }
 
-    @DisplayName("이벤트 기간에 이벤트 확인")
+    @DisplayName("이벤트 기간에 해당하는 이벤트를 반환한다.")
     @Test
     void eventPeriod() {
         List<String> orderedMenus = Arrays.asList(Menu.T_BONE_STEAK.getName(), Menu.RED_WINE.getName());
