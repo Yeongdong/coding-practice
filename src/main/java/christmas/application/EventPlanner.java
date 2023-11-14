@@ -5,8 +5,8 @@ import christmas.domain.Customer;
 import christmas.view.InputView;
 import christmas.view.OutputView;
 
-public class PromotionOrder {
-    public static void order() {
+public class EventPlanner {
+    public static void show() {
         Customer customer = Customer.reserve(InputView.inputVisitDate(), InputView.inputMenuAndOrderCount());
         OutputView.printPreviewBenefit(customer);
         OutputView.printOrderedMenus(customer);
