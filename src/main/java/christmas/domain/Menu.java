@@ -16,6 +16,7 @@ public enum Menu {
     RED_WINE("레드와인", 60_000),
     CHAMPAIGN("샴페인", 25_000);
 
+    private static final String INVALID_ORDER_MESSAGE = "[ERROR] 유효하지 않은 주문입니다. 다시 입력해 주세요.";
     private final String name;
     private final int price;
 
@@ -36,6 +37,6 @@ public enum Menu {
         return Arrays.stream(Menu.values())
                 .filter(menu -> menu.getName().equals(name))
                 .findFirst()
-                .orElse(null);
+                .orElseThrow(() -> new IllegalArgumentException(INVALID_ORDER_MESSAGE));
     }
 }

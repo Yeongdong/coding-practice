@@ -3,20 +3,35 @@ package christmas.domain;
 import christmas.utils.PromotionRules;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 public class OrderedMenus {
     private static final String INVALID_ORDER_MESSAGE = "[ERROR] 유효하지 않은 주문입니다. 다시 입력해 주세요.";
+    private static final String MENU_AMOUNT_SPLITTER = "-";
     private final List<OrderedMenu> orderedMenus;
 
     private OrderedMenus(List<OrderedMenu> orderedMenus) {
         this.orderedMenus = orderedMenus;
     }
 
-    public static OrderedMenus from(List<String> orderedMenuNames, List<Integer> orderCounts) {
-        validateOrder(orderedMenuNames, orderCounts);
-        List<OrderedMenu> orderedMenus = createOrder(orderedMenuNames, orderCounts);
+    public static OrderedMenus from(List<String> orderInputs) {
+        List<OrderedMenu> orderedMenus = createOrder(orderInputs);
+        validateOrder(orderedMenus);
         return new OrderedMenus(orderedMenus);
+    }
+
+    private static List<OrderedMenu> createOrder(List<String> orderInputs) {
+        try {
+            List<OrderedMenu> menuList = new ArrayList<>();
+            for (String order : orderInputs) {
+                String[] menus = order.split(MENU_AMOUNT_SPLITTER);
+                String menuName = menus[PromotionRules.MENU_ORDER.getValue()];
+                int orderCount = Integer.parseInt(menus[PromotionRules.COUNT_ORDER.getValue()]);
+                menuList.add(OrderedMenu.from(menuName, orderCount));
+            }
+            return menuList;
+        } catch (IllegalArgumentException e) {
+            throw new IllegalArgumentException(INVALID_ORDER_MESSAGE);
+        }
     }
 
     public static boolean isInMenuCategory(Menu orderedMenu, MenuCategory category) {
@@ -30,46 +45,37 @@ public class OrderedMenus {
         return orderedMenus;
     }
 
-    private static List<OrderedMenu> createOrder(List<String> orderedMenuNames, List<Integer> orderCounts) {
-        return orderedMenuNames.stream()
-                .map(menuName -> OrderedMenu.from(Menu.findByName(menuName), orderCounts.get(orderedMenuNames.indexOf(menuName))))
-                .collect(Collectors.toList());
+    private static void validateOrder(List<OrderedMenu> orderedMenuList) {
+//        validateInputForm(orderedMenuList);
+        validateDuplicates(orderedMenuList);
+        validateTotalOrderCount(orderedMenuList);
+//        validateInMenu(orderedMenuList);
+        validateMenusNotOnlyBeverage(orderedMenuList, MenuCategory.BEVERAGE);
     }
 
-    private static void validateOrder(List<String> orderedMenuNames, List<Integer> orderCounts) {
-        validateDuplicates(orderedMenuNames);
-        validateTotalOrderCount(orderCounts);
-        validateInMenu(orderedMenuNames);
-        validateMenusNotOnlyBeverage(orderedMenuNames, MenuCategory.BEVERAGE);
-    }
-
-    private static void validateTotalOrderCount(List<Integer> orderCounts) {
-        int totalOrderCount = orderCounts.stream()
-                .mapToInt(Integer::intValue)
+    private static void validateTotalOrderCount(List<OrderedMenu> orderedMenuList) {
+        int totalOrderCount = orderedMenuList.stream()
+                .mapToInt(OrderedMenu::getOrderCount)
                 .sum();
         if (totalOrderCount > PromotionRules.MAXIMUM_ORDER_COUNT.getValue()) {
             throw new IllegalArgumentException(INVALID_ORDER_MESSAGE);
         }
     }
 
-    private static void validateDuplicates(List<String> orderedMenuNames) {
-        Set<String> uniqueMenuNames = new HashSet<>(orderedMenuNames);
-        if (uniqueMenuNames.size() != orderedMenuNames.size()) {
+    private static void validateDuplicates(List<OrderedMenu> orderedMenuList) {
+        Set<String> uniqueMenuNames = new HashSet<>();
+        boolean hasDuplicates = orderedMenuList.stream()
+                .map(OrderedMenu::getMenuName)
+                .anyMatch(menuName -> !uniqueMenuNames.add(menuName));
+
+        if (hasDuplicates) {
             throw new IllegalArgumentException(INVALID_ORDER_MESSAGE);
         }
     }
 
-    private static void validateInMenu(List<String> orderedMenuNames) {
-        for (String menuName : orderedMenuNames) {
-            if (Menu.findByName(menuName) == null) {
-                throw new IllegalArgumentException(INVALID_ORDER_MESSAGE);
-            }
-        }
-    }
-
-    private static void validateMenusNotOnlyBeverage(List<String> orderedMenuNames, MenuCategory menuCategory) {
-        if (orderedMenuNames.stream()
-                .allMatch(menuName -> isInMenuCategory(Menu.findByName(menuName), menuCategory))) {
+    private static void validateMenusNotOnlyBeverage(List<OrderedMenu> orderedMenuList, MenuCategory menuCategory) {
+        if (orderedMenuList.stream()
+                .allMatch(menuName -> isInMenuCategory(Menu.findByName(menuName.getMenuName()), menuCategory))) {
             throw new IllegalArgumentException(INVALID_ORDER_MESSAGE);
         }
     }

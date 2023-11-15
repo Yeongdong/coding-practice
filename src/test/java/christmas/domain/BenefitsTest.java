@@ -14,9 +14,8 @@ class BenefitsTest {
     @DisplayName("혜택이 있을시 이벤트 혜택을 반환한다.")
     @Test
     void calculateBenefits_WithSpecialEvent() {
-        List<String> orderedMenus = Arrays.asList(Menu.CAESAR_SALAD.getName(), Menu.RED_WINE.getName(), Menu.ICECREAM.getName());
-        List<Integer> orderCounts = Arrays.asList(3, 2, 1);
-        OrderedMenus orderedMenuList = OrderedMenus.from(orderedMenus, orderCounts);
+        List<String> menuList = Arrays.asList("해산물파스타-2", "레드와인-1", "초코케이크-1");
+        OrderedMenus orderedMenuList = OrderedMenus.from(menuList);
         Customer customer = Customer.reserve(EventDate.from(26), orderedMenuList);
         Benefits benefits = Benefits.from(customer);
 

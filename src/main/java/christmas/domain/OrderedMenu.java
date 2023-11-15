@@ -12,9 +12,10 @@ public class OrderedMenu {
         this.orderCount = orderCount;
     }
 
-    public static OrderedMenu from(Menu menuName, int orderCount) {
+    public static OrderedMenu from(String menuName, int orderCount) {
+        Menu menu = Menu.findByName(menuName);
         validateOrderCount(orderCount);
-        return new OrderedMenu(menuName, orderCount);
+        return new OrderedMenu(menu, orderCount);
     }
 
     private static void validateOrderCount(int orderCount) {
