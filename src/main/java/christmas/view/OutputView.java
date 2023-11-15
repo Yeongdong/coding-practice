@@ -27,11 +27,10 @@ public class OutputView {
 
     public static void printOrderedMenus(Customer customer) {
         System.out.println(ORDERED_MENU_MESSAGE);
-        for (int i = 0; i < customer.getOrderedMenusList().size(); i++) {
-            OrderedMenu orderedMenu = customer.getOrderedMenusList().get(i);
+        customer.getOrderedMenusList().forEach(orderedMenu -> {
             System.out.printf(MENU_AND_ORDER_COUNT_FORMAT, orderedMenu.getMenuName(), orderedMenu.getOrderCount());
             System.out.println();
-        }
+        });
     }
 
     public static void printTotalPriceBeforeDiscount(Customer customer) {
