@@ -21,7 +21,8 @@ public class EventDate {
         this.visitDate = visitDate;
     }
 
-    public static EventDate from(int visitDate) {
+    public static EventDate from(String estimatedDate) {
+        int visitDate = toInt(estimatedDate);
         validateDate(visitDate);
         return new EventDate(visitDate);
     }
@@ -85,6 +86,14 @@ public class EventDate {
             Date date = dateFormat.parse(dateString);
             return date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
         } catch (ParseException e) {
+            throw new IllegalArgumentException(INVALID_DATE_MESSAGE);
+        }
+    }
+
+    private static int toInt(String input) {
+        try {
+            return Integer.parseInt(input);
+        } catch (NumberFormatException e) {
             throw new IllegalArgumentException(INVALID_DATE_MESSAGE);
         }
     }

@@ -7,14 +7,15 @@ import java.util.*;
 public class OrderedMenus {
     private static final String INVALID_ORDER_MESSAGE = "[ERROR] 유효하지 않은 주문입니다. 다시 입력해 주세요.";
     private static final String MENU_AMOUNT_SPLITTER = "-";
+    private static final String ORDER_SPLITTER = ",";
     private final List<OrderedMenu> orderedMenus;
 
     private OrderedMenus(List<OrderedMenu> orderedMenus) {
         this.orderedMenus = orderedMenus;
     }
 
-    public static OrderedMenus from(List<String> orderInputs) {
-        List<OrderedMenu> orderedMenus = createOrder(orderInputs);
+    public static OrderedMenus from(String orderInputs) {
+        List<OrderedMenu> orderedMenus = createOrder(toList(orderInputs));
         validateOrder(orderedMenus);
         return new OrderedMenus(orderedMenus);
     }
@@ -24,8 +25,9 @@ public class OrderedMenus {
             List<OrderedMenu> menuList = new ArrayList<>();
             for (String order : orderInputs) {
                 String[] menus = order.split(MENU_AMOUNT_SPLITTER);
+                validateInputForm(menus);
                 String menuName = menus[PromotionRules.MENU_ORDER.getValue()];
-                int orderCount = Integer.parseInt(menus[PromotionRules.COUNT_ORDER.getValue()]);
+                int orderCount = toInt(menus[PromotionRules.COUNT_ORDER.getValue()]);
                 menuList.add(OrderedMenu.from(menuName, orderCount));
             }
             return menuList;
@@ -46,10 +48,8 @@ public class OrderedMenus {
     }
 
     private static void validateOrder(List<OrderedMenu> orderedMenuList) {
-//        validateInputForm(orderedMenuList);
         validateDuplicates(orderedMenuList);
         validateTotalOrderCount(orderedMenuList);
-//        validateInMenu(orderedMenuList);
         validateMenusNotOnlyBeverage(orderedMenuList, MenuCategory.BEVERAGE);
     }
 
@@ -73,9 +73,28 @@ public class OrderedMenus {
         }
     }
 
+    private static int toInt(String input) {
+        try {
+            return Integer.parseInt(input);
+        } catch (NumberFormatException e) {
+            throw new IllegalArgumentException(INVALID_ORDER_MESSAGE);
+        }
+    }
+
     private static void validateMenusNotOnlyBeverage(List<OrderedMenu> orderedMenuList, MenuCategory menuCategory) {
         if (orderedMenuList.stream()
                 .allMatch(menuName -> isInMenuCategory(Menu.findByName(menuName.getMenuName()), menuCategory))) {
+            throw new IllegalArgumentException(INVALID_ORDER_MESSAGE);
+        }
+    }
+
+    private static List<String> toList(String menuAndOrderCount) {
+        return Arrays.stream(menuAndOrderCount.split(ORDER_SPLITTER))
+                .toList();
+    }
+
+    private static void validateInputForm(String[] menus) {
+        if (menus.length != PromotionRules.VALID_MENU_LENGTH.getValue()) {
             throw new IllegalArgumentException(INVALID_ORDER_MESSAGE);
         }
     }

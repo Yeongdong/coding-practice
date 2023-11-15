@@ -4,8 +4,6 @@ import christmas.domain.*;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
-import java.util.stream.Collectors;
 
 public class OutputView {
     private static final String PREVIEW_BENEFIT_MESSAGE = "12월 %d일에 우테코 식당에서 받을 이벤트 혜택 미리 보기!\n";
@@ -86,24 +84,15 @@ public class OutputView {
         if (benefits.isEmpty()) {
             return NOT_APPLICABLE;
         }
-        Set<String> filteredKeys = filterGiveaway(benefits);
-        addFilteredBenefitsToResult(benefits, filteredKeys, result);
+        benefits.getBenefits().forEach((key, discount) -> {
+            if (discount > 0)
+                result.add(String.format(BENEFIT_FORMAT, key) + String.format(DISCOUNT_FORMAT, discount));
+        });
+
         if (benefits.containsKey(Menu.CHAMPAIGN.getName())) {
             result.add(String.format(GIVEAWAY_EVENT, Menu.CHAMPAIGN.getPrice()));
+            result.remove(String.format(BENEFIT_FORMAT, Menu.CHAMPAIGN.getName()) + String.format(DISCOUNT_FORMAT, Menu.CHAMPAIGN.getPrice()));
         }
         return String.join("", result);
-    }
-
-    private static Set<String> filterGiveaway(Benefits benefits) {
-        return benefits.getBenefits().keySet().stream()
-                .filter(key -> !Menu.CHAMPAIGN.getName().equals(key) && benefits.getBenefits().get(key) > 0)
-                .collect(Collectors.toSet());
-    }
-
-    private static void addFilteredBenefitsToResult(Benefits benefits, Set<String> filteredKeys, List<String> result) {
-        filteredKeys.forEach(key -> {
-            int discount = benefits.getBenefits().get(key);
-            result.add(String.format(BENEFIT_FORMAT, key) + String.format(DISCOUNT_FORMAT, discount));
-        });
     }
 }
