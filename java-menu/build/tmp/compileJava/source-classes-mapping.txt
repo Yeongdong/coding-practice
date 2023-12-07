@@ -1,0 +1,28 @@
+menu/domain/Menu.java
+ menu.domain.Menu
+menu/Application.java
+ menu.Application
+menu/domain/DaysOfWeek.java
+ menu.domain.DaysOfWeek
+menu/view/InputView.java
+ menu.view.InputView
+menu/domain/HateMenu.java
+ menu.domain.HateMenu
+menu/domain/SelectMenu.java
+ menu.domain.SelectMenu
+menu/domain/HateMenus.java
+ menu.domain.HateMenus
+menu/view/ResultView.java
+ menu.view.ResultView
+menu/application/Lunch.java
+ menu.application.Lunch
+menu/domain/MenuInfo.java
+ menu.domain.MenuInfo
+menu/domain/Coaches.java
+ menu.domain.Coaches
+menu/domain/SelectCategory.java
+ menu.domain.SelectCategory
+menu/domain/SelectMenus.java
+ menu.domain.SelectMenus
+menu/domain/Coach.java
+ menu.domain.Coach
