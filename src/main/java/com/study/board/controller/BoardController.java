@@ -7,6 +7,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 @Controller
 public class BoardController {
@@ -30,5 +31,11 @@ public class BoardController {
     public String boardList(Model model) {
         model.addAttribute("list", boardService.boardList());
         return "boardlist";
+    }
+
+    @GetMapping("/board/view")  //localhost:8080/board/view?id=1
+    public String boardview(@RequestParam("id") Integer id, Model model) {
+        model.addAttribute("board", boardService.boardView(id));
+        return "boardview";
     }
 }
