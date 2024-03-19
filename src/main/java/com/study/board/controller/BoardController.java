@@ -22,10 +22,13 @@ public class BoardController {
     }
 
     @PostMapping("/board/writepro")
-    public String boardWritePro(Board board) {
-        System.out.println("제목 : " + board.getTitle());
+    public String boardWritePro(Board board, Model model) {
         boardService.write(board);
-        return "";
+
+        model.addAttribute("message", "글 작성이 완료되었습니다.");
+        model.addAttribute("searchUrl", "/board/list");
+
+        return "message";
     }
 
     @GetMapping("/board/list")
@@ -41,9 +44,11 @@ public class BoardController {
     }
 
     @GetMapping("board/delete")
-    public String boardDelete(@RequestParam("id") Integer id) {
+    public String boardDelete(@RequestParam("id") Integer id, Model model) {
         boardService.boardDelete(id);
-        return "redirect:/board/list";
+        model.addAttribute("message", "글 삭제가 완료되었습니다.");
+        model.addAttribute("searchUrl", "/board/list");
+        return "message";
     }
 
     @GetMapping("/board/modify/{id}")
@@ -53,11 +58,15 @@ public class BoardController {
     }
 
     @PostMapping("board/update/{id}")
-    public String boardUpdate(@PathVariable("id") Integer id, Board board) {
+    public String boardUpdate(@PathVariable("id") Integer id, Board board, Model model) {
         Board boardTemp = boardService.boardView(id);
         boardTemp.setTitle(board.getTitle());
         boardTemp.setContent(board.getContent());
         boardService.write(boardTemp);
-        return "redirect:/board/list";
+
+        model.addAttribute("message", "글 수정이 완료되었습니다.");
+        model.addAttribute("searchUrl", "/board/list");
+
+        return "message";
     }
 }
