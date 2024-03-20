@@ -31,18 +31,14 @@ public class BoardController {
     @PostMapping("/board/writepro")
     public String boardWritePro(Board board, Model model, @RequestParam("file") MultipartFile file) throws IOException {
         boardService.write(board, file);
-
-        model.addAttribute("message", "글 작성이 완료되었습니다.");
-        model.addAttribute("searchUrl", "/board/list");
-
+        callMessage(model, "글 작성이 완료되었습니다.");
         return "message";
     }
 
     @GetMapping("/board/list")
     public String boardList(Model model,
-                            @PageableDefault(page = 0, size = 10, sort = "id", direction = Sort.Direction.DESC) Pageable pageable,
+                            @PageableDefault(sort = "id", direction = Sort.Direction.DESC) Pageable pageable,
                             @RequestParam(value = "searchKeyword", required = false) String searchKeyword) {
-
         Page<Board> list = null;
 
         if (searchKeyword == null) {
@@ -71,8 +67,7 @@ public class BoardController {
     @GetMapping("board/delete")
     public String boardDelete(@RequestParam("id") Integer id, Model model) {
         boardService.boardDelete(id);
-        model.addAttribute("message", "글 삭제가 완료되었습니다.");
-        model.addAttribute("searchUrl", "/board/list");
+        callMessage(model, "글 삭제가 완료되었습니다.");
         return "message";
     }
 
@@ -89,9 +84,12 @@ public class BoardController {
         boardTemp.setContent(board.getContent());
         boardService.write(boardTemp, file);
 
-        model.addAttribute("message", "글 수정이 완료되었습니다.");
-        model.addAttribute("searchUrl", "/board/list");
-
+        callMessage(model, "글 수정이 완료되었습니다.");
         return "message";
+    }
+
+    private void callMessage(Model model, String message) {
+        model.addAttribute("message", message);
+        model.addAttribute("searchUrl", "/board/list");
     }
 }

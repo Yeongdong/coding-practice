@@ -27,11 +27,12 @@
 </style>
 <body>
 <div class="layout">
+    <h1 th:text="#{page.boardwrite}"></h1>
     <form action="/board/writepro" method="post" enctype="multipart/form-data">
         <input name="title" type="text">
         <textarea name="content"></textarea>
         <input type="file" name="file">
-        <button type="submit">작성</button>
+        <button th:text="#{button.save}" type="submit">작성</button>
     </form>
 </div>
 </body>

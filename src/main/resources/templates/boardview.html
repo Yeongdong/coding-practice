@@ -5,10 +5,11 @@
     <title>게시글 상세 페이지</title>
 </head>
 <body>
-<h1 th:text="${board.title}">제목입니다.</h1>
+<h1 th:text="#{page.boardview}"></h1>
+<h2 th:text="${board.title}">제목입니다.</h2>
 <p th:text="${board.content}">내용이 들어갈 부분입니다.</p>
 <a th:href="@{${board.filepath}}">이미지 보기</a>
-<a th:href="@{/board/modify/{id}(id=${board.id})}">수정하기</a>
-<a th:href="@{/board/delete(id=${board.id})}">삭제하기</a>
+<a th:text="#{button.edit}" th:href="@{/board/modify/{id}(id=${board.id})}">수정하기</a>
+<a th:text="#{button.delete}" th:href="@{/board/delete(id=${board.id})}">삭제하기</a>
 </body>
 </html>
