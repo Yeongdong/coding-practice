@@ -39,8 +39,19 @@ public class BoardController {
     }
 
     @GetMapping("/board/list")
-    public String boardList(Model model, @PageableDefault(page = 0, size = 10, sort = "id", direction = Sort.Direction.DESC) Pageable pageable) {
-        Page<Board> list = boardService.boardList(pageable);
+    public String boardList(Model model,
+                            @PageableDefault(page = 0, size = 10, sort = "id", direction = Sort.Direction.DESC) Pageable pageable,
+                            @RequestParam(value = "searchKeyword", required = false) String searchKeyword) {
+
+        Page<Board> list = null;
+
+        if (searchKeyword == null) {
+            list = boardService.boardList(pageable);
+        } else {
+            list = boardService.boardSearchList(searchKeyword, pageable);
+        }
+
+
         int nowPage = list.getPageable().getPageNumber() + 1;
         int startPage = Math.max(nowPage - 4, 1);
         int endPage = Math.min(nowPage + 5, list.getTotalPages());  // 페이징 알고리즘 적용 필요
