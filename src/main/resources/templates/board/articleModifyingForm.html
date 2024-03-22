@@ -28,9 +28,9 @@
 <body>
 <div class="layout">
   <h1 th:text="#{page.boardmodify}"></h1>
-  <form th:action="@{/board/update/{id}(id=${board.id})}" method="post">
-    <input name="title" type="text" th:value="${board.title}">
-    <textarea name="content" th:text="${board.content}"></textarea>
+  <form th:action="@{/article/update/{id}(id=${article.id})}" method="post">
+    <input name="title" type="text" th:value="${article.title}">
+    <textarea name="content" th:text="${article.content}"></textarea>
     <button th:text="#{button.edit}" type="submit"></button>
   </form>
 </div>

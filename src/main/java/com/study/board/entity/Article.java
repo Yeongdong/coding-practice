@@ -8,12 +8,13 @@ import lombok.Data;
 
 @Entity
 @Data
-public class Board {
+public class Article {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
     private String title;
     private String content;
+    private String writer;
     private String filename;
     private String filepath;
 

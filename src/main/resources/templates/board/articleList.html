@@ -22,20 +22,20 @@
             </tr>
         </thead>
         <tbody>
-            <tr th:each="board : ${list}">
-                <td th:text="${board.id}"></td>
+            <tr th:each="article : ${list}">
+                <td th:text="${article.id}"></td>
                 <td>
-                    <a th:text="${board.title}" th:href="@{/board/view(id=${board.id})}"></a>
+                    <a th:text="${article.title}" th:href="@{/article/view(id=${article.id})}"></a>
                 </td>
             </tr>
         </tbody>
     </table>
 
     <th:block th:each="page: ${#numbers.sequence(startPage, endPage)}">
-        <a th:if="${page != nowPage}" th:href="@{/board/list(page = ${page - 1}, searchKeyword = ${param.searchKeyword})}" th:text="${page}"></a>
+        <a th:if="${page != nowPage}" th:href="@{/article/list(page = ${page - 1}, searchKeyword = ${param.searchKeyword})}" th:text="${page}"></a>
         <strong th:if="${page == nowPage}" th:text="${page}" style="color: red"></strong>
     </th:block>
-    <form th:action="@{/board/list}" method="get">
+    <form th:action="@{/article/list}" method="get">
         <input type="text" name="searchKeyword">
         <button th:text="#{button.search}" type="submit"></button>
     </form>

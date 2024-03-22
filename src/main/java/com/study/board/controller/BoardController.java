@@ -1,6 +1,6 @@
 package com.study.board.controller;
 
-import com.study.board.entity.Board;
+import com.study.board.entity.Article;
 import com.study.board.service.BoardService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -24,29 +24,28 @@ public class BoardController {
     private BoardService boardService;
 
     @GetMapping("/board/write") //localhost:8080/board/write
-    public String boardWriteForm() {
-        return "boardwrite";
+    public String writeArticle() {
+        return "/board/writeForm";
     }
 
-    @PostMapping("/board/writepro")
-    public String boardWritePro(Board board, Model model, @RequestParam("file") MultipartFile file) throws IOException {
-        boardService.write(board, file);
+    @PostMapping("/board/write")
+    public String writeArticle(Article article, Model model, @RequestParam("file") MultipartFile file) throws IOException {
+        boardService.write(article, file);
         callMessage(model, "글 작성이 완료되었습니다.");
         return "message";
     }
 
     @GetMapping("/board/list")
-    public String boardList(Model model,
+    public String articleList(Model model,
                             @PageableDefault(sort = "id", direction = Sort.Direction.DESC) Pageable pageable,
                             @RequestParam(value = "searchKeyword", required = false) String searchKeyword) {
-        Page<Board> list = null;
+        Page<Article> list = null;
 
         if (searchKeyword == null) {
-            list = boardService.boardList(pageable);
+            list = boardService.viewList(pageable);
         } else {
-            list = boardService.boardSearchList(searchKeyword, pageable);
+            list = boardService.viewSearchList(searchKeyword, pageable);
         }
-
 
         int nowPage = list.getPageable().getPageNumber() + 1;
         int startPage = Math.max(nowPage - 4, 1);
@@ -55,34 +54,34 @@ public class BoardController {
         model.addAttribute("nowPage", nowPage);
         model.addAttribute("startPage", startPage);
         model.addAttribute("endPage", endPage);
-        return "boardlist";
+        return "/board/articleList";
     }
 
     @GetMapping("/board/view")  //localhost:8080/board/view?id=1
-    public String boardview(@RequestParam("id") Integer id, Model model) {
-        model.addAttribute("board", boardService.boardView(id));
-        return "boardview";
+    public String viewArticle(@RequestParam("id") Integer id, Model model) {
+        model.addAttribute("board", boardService.viewArticle(id));
+        return "/board/articleViewForm";
     }
 
     @GetMapping("board/delete")
-    public String boardDelete(@RequestParam("id") Integer id, Model model) {
-        boardService.boardDelete(id);
+    public String deleteArticle(@RequestParam("id") Integer id, Model model) {
+        boardService.deleteArticle(id);
         callMessage(model, "글 삭제가 완료되었습니다.");
         return "message";
     }
 
     @GetMapping("/board/modify/{id}")
-    public String boardModify(@PathVariable("id") Integer id, Model model) {
-        model.addAttribute("board", boardService.boardView(id));
-        return "boardmodify";
+    public String modifyArticle(@PathVariable("id") Integer id, Model model) {
+        model.addAttribute("board", boardService.viewArticle(id));
+        return "/board/articleModifyingForm";
     }
 
     @PostMapping("board/update/{id}")
-    public String boardUpdate(@PathVariable("id") Integer id, Board board, Model model, @RequestParam("file") MultipartFile file) throws IOException {
-        Board boardTemp = boardService.boardView(id);
-        boardTemp.setTitle(board.getTitle());
-        boardTemp.setContent(board.getContent());
-        boardService.write(boardTemp, file);
+    public String boardUpdate(@PathVariable("id") Integer id, Article article, Model model, @RequestParam("file") MultipartFile file) throws IOException {
+        Article articleTemp = boardService.viewArticle(id);
+        articleTemp.setTitle(article.getTitle());
+        articleTemp.setContent(article.getContent());
+        boardService.write(articleTemp, file);
 
         callMessage(model, "글 수정이 완료되었습니다.");
         return "message";
