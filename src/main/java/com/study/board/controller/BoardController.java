@@ -2,28 +2,25 @@ package com.study.board.controller;
 
 import com.study.board.entity.Article;
 import com.study.board.service.BoardService;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 
 @Controller
+@RequiredArgsConstructor
 public class BoardController {
 
-    @Autowired
-    private BoardService boardService;
+    private final BoardService boardService;
 
-    @GetMapping("/board/write") //localhost:8080/board/write
+    @GetMapping("/board/write")
     public String writeArticle() {
         return "/board/writeForm";
     }
@@ -57,13 +54,13 @@ public class BoardController {
         return "/board/articleList";
     }
 
-    @GetMapping("/board/view")  //localhost:8080/board/view?id=1
+    @GetMapping("/board/view")
     public String viewArticle(@RequestParam("id") Integer id, Model model) {
-        model.addAttribute("board", boardService.viewArticle(id));
+        model.addAttribute("article", boardService.viewArticle(id));
         return "/board/articleViewForm";
     }
 
-    @GetMapping("board/delete")
+    @GetMapping("/board/delete")
     public String deleteArticle(@RequestParam("id") Integer id, Model model) {
         boardService.deleteArticle(id);
         callMessage(model, "글 삭제가 완료되었습니다.");
@@ -72,16 +69,13 @@ public class BoardController {
 
     @GetMapping("/board/modify/{id}")
     public String modifyArticle(@PathVariable("id") Integer id, Model model) {
-        model.addAttribute("board", boardService.viewArticle(id));
+        model.addAttribute("article", boardService.viewArticle(id));
         return "/board/articleModifyingForm";
     }
 
-    @PostMapping("board/update/{id}")
-    public String boardUpdate(@PathVariable("id") Integer id, Article article, Model model, @RequestParam("file") MultipartFile file) throws IOException {
-        Article articleTemp = boardService.viewArticle(id);
-        articleTemp.setTitle(article.getTitle());
-        articleTemp.setContent(article.getContent());
-        boardService.write(articleTemp, file);
+    @PostMapping("/board/modify/{id}")
+    public String modifyArticle(@PathVariable("id") Integer id, Article article, Model model, @RequestParam("file") MultipartFile file) throws IOException {
+        boardService.updateArticle(id, article, file);
 
         callMessage(model, "글 수정이 완료되었습니다.");
         return "message";
