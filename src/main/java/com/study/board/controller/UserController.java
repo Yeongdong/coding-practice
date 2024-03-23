@@ -1,6 +1,6 @@
 package com.study.board.controller;
 
-import com.study.board.entity.User;
+import com.study.board.domain.User;
 import com.study.board.service.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;

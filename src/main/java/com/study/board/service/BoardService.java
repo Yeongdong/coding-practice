@@ -1,6 +1,9 @@
 package com.study.board.service;
 
-import com.study.board.entity.Article;
+import com.study.board.controller.ArticleForm;
+import com.study.board.domain.Article;
+import com.study.board.domain.UploadFile;
+import com.study.board.file.FileStore;
 import com.study.board.repository.BoardRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -9,21 +12,24 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.File;
 import java.io.IOException;
-import java.util.UUID;
+import java.util.List;
 
 @Service
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
 public class BoardService {
     private final BoardRepository boardRepository;
+    private final FileStore fileStore;
 
-    @Transactional
     // 글 작성
-    public void write(Article article, MultipartFile file) throws IOException {
-        saveFile(article, file);
-        boardRepository.save(article);
+    @Transactional
+    public void write(ArticleForm articleForm, List<UploadFile> imageFiles) throws IOException {
+        Article newArticle = Article.create(articleForm, imageFiles);
+        for (UploadFile uploadFile : imageFiles) {
+            uploadFile.setArticle(newArticle);
+        }
+        boardRepository.save(newArticle);
     }
 
     // 게시글 리스트 처리
@@ -40,14 +46,15 @@ public class BoardService {
         return boardRepository.findById(id).get();
     }
 
+    // 게시글 수정
     @Transactional
-    public void updateArticle(Integer id, Article article, MultipartFile file) throws IOException {
+    public void updateArticle(Integer id, ArticleForm articleForm, List<MultipartFile> imageFiles) throws IOException {
         Article updateArticle = boardRepository.findById(id).orElse(null);
 
-        updateArticle.setTitle(article.getTitle());
-        updateArticle.setContent(article.getContent());
-        if (!file.isEmpty()) {
-            saveFile(updateArticle, file);
+        updateArticle.setTitle(articleForm.getTitle());
+        updateArticle.setContent(articleForm.getContent());
+        if (!imageFiles.isEmpty()) {
+            updateArticle.setImageFiles(fileStore.storeFiles(imageFiles));
         }
     }
 
@@ -55,16 +62,5 @@ public class BoardService {
     @Transactional
     public void deleteArticle(Integer id) {
         boardRepository.deleteById(id);
-    }
-
-    private void saveFile(Article article, MultipartFile file) throws IOException {
-        String projectPath = System.getProperty("user.dir") + "/src/main/resources/static/files";
-        UUID uuid = UUID.randomUUID();
-        String filename = uuid + "_" + file.getOriginalFilename();
-
-        File saveFile = new File(projectPath, filename);
-        file.transferTo(saveFile);
-        article.setFilename(filename);
-        article.setFilepath("/files/" + filename);
     }
 }

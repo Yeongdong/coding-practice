@@ -1,6 +1,6 @@
 package com.study.board.controller;
 
-import com.study.board.entity.User;
+import com.study.board.domain.User;
 import com.study.board.service.LoginService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;

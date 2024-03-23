@@ -1,6 +1,6 @@
 package com.study.board.controller;
 
-import com.study.board.entity.User;
+import com.study.board.domain.User;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;

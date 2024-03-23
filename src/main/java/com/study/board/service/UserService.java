@@ -1,6 +1,6 @@
 package com.study.board.service;
 
-import com.study.board.entity.User;
+import com.study.board.domain.User;
 import com.study.board.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

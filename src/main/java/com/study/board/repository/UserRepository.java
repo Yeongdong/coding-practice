@@ -1,6 +1,6 @@
 package com.study.board.repository;
 
-import com.study.board.entity.User;
+import com.study.board.domain.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;

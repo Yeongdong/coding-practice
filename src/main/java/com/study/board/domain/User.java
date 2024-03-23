@@ -1,4 +1,4 @@
-package com.study.board.entity;
+package com.study.board.domain;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotEmpty;
