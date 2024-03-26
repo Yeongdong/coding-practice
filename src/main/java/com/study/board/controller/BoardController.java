@@ -1,6 +1,8 @@
 package com.study.board.controller;
 
 import com.study.board.domain.Article;
+import com.study.board.domain.UploadFile;
+import com.study.board.file.FileStore;
 import com.study.board.service.BoardService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.io.Resource;
@@ -22,6 +24,7 @@ import java.util.List;
 public class BoardController {
 
     private final BoardService boardService;
+    private final FileStore fileStore;
 
     @GetMapping("/board/write")
     public String writeArticle() {
@@ -30,7 +33,9 @@ public class BoardController {
 
     @PostMapping("/board/write")
     public String writeArticle(ArticleForm articleForm, Model model) throws IOException {
-        boardService.write(articleForm);
+        List<UploadFile> storeImageFiles = fileStore.storeFiles(articleForm.getImageFiles());
+        Article newArticle = Article.create(articleForm, storeImageFiles);
+        boardService.write(newArticle);
         callMessage(model, "글 작성이 완료되었습니다.");
         return "message";
     }

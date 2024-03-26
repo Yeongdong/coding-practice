@@ -27,13 +27,12 @@ public class BoardService {
 
     // 글 작성
     @Transactional
-    public void write(ArticleForm articleForm) throws IOException {
-        List<UploadFile> storeImageFiles = fileStore.storeFiles(articleForm.getImageFiles());
-        Article newArticle = Article.create(articleForm, storeImageFiles);
-        for (UploadFile uploadFile : storeImageFiles) {
-            uploadFile.setArticle(newArticle);
+    public Integer write(Article article) throws IOException {
+        for (UploadFile uploadFile : article.getImageFiles()) {
+            uploadFile.setArticle(article);
         }
-        boardRepository.save(newArticle);
+        Article saveArticle = boardRepository.save(article);
+        return saveArticle.getId();
     }
 
     // 게시글 리스트 처리
@@ -67,7 +66,7 @@ public class BoardService {
     public void deleteArticle(Integer id) {
         boardRepository.deleteById(id);
     }
-    
+
     // 이미지 다운로드
     public ResponseEntity<Resource> downloadImages(Integer id, String fileName) throws MalformedURLException {
         Article article = boardRepository.findById(id).get();

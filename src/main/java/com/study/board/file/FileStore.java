@@ -41,13 +41,13 @@ public class FileStore {
     }
 
     public List<UploadFile> storeFiles(List<MultipartFile> multipartFiles) throws IOException {
-        List<UploadFile> sotreFileList = new ArrayList<>();
+        List<UploadFile> storeFileList = new ArrayList<>();
         for (MultipartFile multipartFile : multipartFiles) {
             if (!multipartFile.isEmpty()) {
-                sotreFileList.add(storeFile(multipartFile));
+                storeFileList.add(storeFile(multipartFile));
             }
         }
-        return sotreFileList;
+        return storeFileList;
     }
 
     public ResponseEntity<Resource> downloadFiles(Article article, String fileName) throws MalformedURLException {

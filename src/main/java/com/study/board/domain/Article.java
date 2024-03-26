@@ -33,6 +33,19 @@ public class Article {
 
     }
 
+    public static Article create(ArticleForm articleForm) {
+        List<UploadFile> imageFiles = new ArrayList<>();
+        if (articleForm.getImageFiles().isEmpty()) {
+            return new Article(null,
+                    articleForm.getTitle(),
+                    articleForm.getContent(),
+                    articleForm.getWriter(),
+                    imageFiles);
+        } else {
+            return create(articleForm, imageFiles);
+        }
+    }
+
     public static Article create(ArticleForm articleForm, List<UploadFile> imageFiles) {
         return new Article(null,
                 articleForm.getTitle(),
