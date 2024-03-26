@@ -52,7 +52,6 @@ public class FileStore {
 
     public ResponseEntity<Resource> downloadFiles(Article article, String fileName) throws MalformedURLException {
 
-        String storeFileName = fileName;
         String uploadFileName = article.getImageFiles()
                 .stream()
                 .filter(file -> file.getStoreFileName().equals(fileName))
@@ -60,7 +59,7 @@ public class FileStore {
                 .orElse(null)
                 .getUploadFileName();
 
-        UrlResource resource = new UrlResource("file://" + getFullPath(storeFileName));
+        UrlResource resource = new UrlResource("file://" + getFullPath(fileName));
 
         String encodedUploadFileName = UriUtils.encode(uploadFileName, StandardCharsets.UTF_8);
         String contentDisposition = "attachment; filename=\"" + encodedUploadFileName + "\"";

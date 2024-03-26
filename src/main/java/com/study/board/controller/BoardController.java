@@ -1,8 +1,6 @@
 package com.study.board.controller;
 
 import com.study.board.domain.Article;
-import com.study.board.domain.UploadFile;
-import com.study.board.file.FileStore;
 import com.study.board.service.BoardService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.io.Resource;

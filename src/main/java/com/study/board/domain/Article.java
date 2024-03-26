@@ -2,7 +2,6 @@ package com.study.board.domain;
 
 import com.study.board.controller.ArticleForm;
 import jakarta.persistence.*;
-import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 

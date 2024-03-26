@@ -28,7 +28,7 @@ public class BoardService {
     // 글 작성
     @Transactional
     public void write(ArticleForm articleForm) throws IOException {
-        List<UploadFile> storeImageFiles = fileStore.storeFiles(articleForm.getImageFiles());;
+        List<UploadFile> storeImageFiles = fileStore.storeFiles(articleForm.getImageFiles());
         Article newArticle = Article.create(articleForm, storeImageFiles);
         for (UploadFile uploadFile : storeImageFiles) {
             uploadFile.setArticle(newArticle);
