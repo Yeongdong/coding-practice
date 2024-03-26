@@ -6,13 +6,16 @@ import com.study.board.domain.UploadFile;
 import com.study.board.file.FileStore;
 import com.study.board.repository.BoardRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.core.io.Resource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.net.MalformedURLException;
 import java.util.List;
 
 @Service
@@ -24,9 +27,10 @@ public class BoardService {
 
     // 글 작성
     @Transactional
-    public void write(ArticleForm articleForm, List<UploadFile> imageFiles) throws IOException {
-        Article newArticle = Article.create(articleForm, imageFiles);
-        for (UploadFile uploadFile : imageFiles) {
+    public void write(ArticleForm articleForm) throws IOException {
+        List<UploadFile> storeImageFiles = fileStore.storeFiles(articleForm.getImageFiles());;
+        Article newArticle = Article.create(articleForm, storeImageFiles);
+        for (UploadFile uploadFile : storeImageFiles) {
             uploadFile.setArticle(newArticle);
         }
         boardRepository.save(newArticle);
@@ -62,5 +66,11 @@ public class BoardService {
     @Transactional
     public void deleteArticle(Integer id) {
         boardRepository.deleteById(id);
+    }
+    
+    // 이미지 다운로드
+    public ResponseEntity<Resource> downloadImages(Integer id, String fileName) throws MalformedURLException {
+        Article article = boardRepository.findById(id).get();
+        return fileStore.downloadFiles(article, fileName);
     }
 }

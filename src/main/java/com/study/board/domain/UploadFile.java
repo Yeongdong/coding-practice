@@ -13,7 +13,7 @@ public class UploadFile {
     private String uploadFileName;
     private String storeFileName;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "article_id")
     private Article article;
 

@@ -8,7 +8,8 @@
 <h1 th:text="#{page.boardview}"></h1>
 <h2 th:text="${article.title}">제목입니다.</h2>
 <p th:text="${article.content}">내용이 들어갈 부분입니다.</p>
-<img th:each="uploadFile : ${article.imageFiles}" th:src="@{/images/{fileName}(fileName=${uploadFile.storeFileName})}"/>
+<img th:each="uploadFile : ${article.imageFiles}" th:src="@{/resources/img/{fileName}(fileName=${uploadFile.storeFileName})}"/>
+<a th:each="uploadFile : ${article.imageFiles}" th:href="@{/board/download(id=${article.id}, storeFileName=${uploadFile.storeFileName})}">이미지 다운로드</a>
 <a th:text="#{button.edit}" th:href="@{/board/modify/{id}(id=${article.id})}">수정하기</a>
 <a th:text="#{button.delete}" th:href="@{/board/delete(id=${article.id})}">삭제하기</a>
 </body>

@@ -1,12 +1,21 @@
 package com.study.board.file;
 
+import com.study.board.domain.Article;
 import com.study.board.domain.UploadFile;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.UrlResource;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.util.UriUtils;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.MalformedURLException;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -33,12 +42,33 @@ public class FileStore {
 
     public List<UploadFile> storeFiles(List<MultipartFile> multipartFiles) throws IOException {
         List<UploadFile> sotreFileList = new ArrayList<>();
-        for(MultipartFile multipartFile : multipartFiles) {
-            if(!multipartFile.isEmpty()) {
+        for (MultipartFile multipartFile : multipartFiles) {
+            if (!multipartFile.isEmpty()) {
                 sotreFileList.add(storeFile(multipartFile));
             }
         }
         return sotreFileList;
+    }
+
+    public ResponseEntity<Resource> downloadFiles(Article article, String fileName) throws MalformedURLException {
+
+        String storeFileName = fileName;
+        String uploadFileName = article.getImageFiles()
+                .stream()
+                .filter(file -> file.getStoreFileName().equals(fileName))
+                .findFirst()
+                .orElse(null)
+                .getUploadFileName();
+
+        UrlResource resource = new UrlResource("file://" + getFullPath(storeFileName));
+
+        String encodedUploadFileName = UriUtils.encode(uploadFileName, StandardCharsets.UTF_8);
+        String contentDisposition = "attachment; filename=\"" + encodedUploadFileName + "\"";
+
+        return ResponseEntity.ok()
+                .header(HttpHeaders.CONTENT_DISPOSITION, contentDisposition)
+                .contentType(MediaType.APPLICATION_OCTET_STREAM)
+                .body(resource);
     }
 
     private String createStoreFileName(String originalFileName) {
