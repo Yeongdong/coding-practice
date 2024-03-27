@@ -1,0 +1,27 @@
+DROP TABLE IF EXISTS Article CASCADE;
+DROP TABLE IF EXISTS Upload_file CASCADE;
+DROP TABLE IF EXISTS User CASCADE;
+
+CREATE TABLE Article (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    title VARCHAR(255) NOT NULL,
+    content CLOB NOT NULL,
+    writer VARCHAR(255) NOT NULL
+);
+
+CREATE TABLE Upload_file (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    upload_file_name VARCHAR(255) NOT NULL,
+    store_file_name VARCHAR(255) NOT NULL,
+    article_id INT,
+    FOREIGN KEY (article_id) REFERENCES Article(id) ON DELETE CASCADE
+);
+
+CREATE TABLE User (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    login_id VARCHAR(255) NOT NULL UNIQUE,
+    name VARCHAR(255) NOT NULL,
+    password VARCHAR(255) NOT NULL
+);
+
+
