@@ -56,7 +56,7 @@ public class BoardService {
 
         updateArticle.setTitle(articleForm.getTitle());
         updateArticle.setContent(articleForm.getContent());
-        if (!imageFiles.isEmpty()) {
+        if (imageFiles != null && !imageFiles.isEmpty()) {
             updateArticle.setImageFiles(fileStore.storeFiles(imageFiles));
         }
     }
