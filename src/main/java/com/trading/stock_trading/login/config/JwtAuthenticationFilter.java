@@ -1,5 +1,6 @@
-package com.trading.stock_trading.login.handler;
+package com.trading.stock_trading.login.config;
 
+import com.trading.stock_trading.login.handler.JwtTokenProvider;
 import jakarta.servlet.*;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
