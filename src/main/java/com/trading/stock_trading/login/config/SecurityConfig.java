@@ -29,9 +29,10 @@ public class SecurityConfig {
                 .sessionManagement(session -> session
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/api/v1/alpaca/**").permitAll()  // 테스트를 위해 임시로 허용
+                                .anyRequest().permitAll()  // 테스트를 위해 임시로 허용
+//                        .requestMatchers("/api/v1/alpaca/**").permitAll()
 //                        .requestMatchers("/", "/login/**", "/oauth2/**").permitAll()
-                        .anyRequest().authenticated()
+//                        .anyRequest().authenticated()
                 )
                 .oauth2Login(oauth2 -> oauth2
                         .userInfoEndpoint(userInfo -> userInfo
