@@ -1,8 +1,10 @@
 package com.trading.stock_trading.trade.service;
 
-import com.trading.stock_trading.trade.entity.*;
+import com.trading.stock_trading.trade.dto.OrderRequest;
+import com.trading.stock_trading.trade.dto.OrderResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import net.jacobpeterson.alpaca.openapi.trader.model.*;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Flux;
@@ -14,11 +16,11 @@ import reactor.core.publisher.Mono;
 public class AlpacaTradingService {
     private final WebClient alpacaWebClient;
 
-    public Mono<AccountInfo> getAccount() {
+    public Mono<Account> getAccount() {
         return alpacaWebClient.get()
                 .uri("/account")
                 .retrieve()
-                .bodyToMono(AccountInfo.class)
+                .bodyToMono(Account.class)
                 .doOnSuccess(account -> log.info("계좌 정보 조회 성공: {}", account))
                 .doOnError(error -> log.error("계좌 정보 조회 실패", error));
     }
@@ -41,11 +43,11 @@ public class AlpacaTradingService {
                 .doOnError(error -> log.error("포지션 조회 실패", error));
     }
 
-    public Flux<Order> getOrders() {
+    public Flux<OrderResponse> getOrders() {
         return alpacaWebClient.get()
                 .uri("/orders")
                 .retrieve()
-                .bodyToFlux(Order.class)
+                .bodyToFlux(OrderResponse.class)
                 .doOnError(error -> log.error("주문 조회 실패", error));
     }
 }

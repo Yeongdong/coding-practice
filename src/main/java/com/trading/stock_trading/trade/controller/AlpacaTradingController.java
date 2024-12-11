@@ -1,8 +1,11 @@
 package com.trading.stock_trading.trade.controller;
 
-import com.trading.stock_trading.trade.entity.*;
+import com.trading.stock_trading.trade.dto.OrderRequest;
+import com.trading.stock_trading.trade.dto.OrderResponse;
 import com.trading.stock_trading.trade.service.AlpacaTradingService;
 import lombok.RequiredArgsConstructor;
+import net.jacobpeterson.alpaca.openapi.trader.model.Account;
+import net.jacobpeterson.alpaca.openapi.trader.model.Position;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -14,7 +17,7 @@ public class AlpacaTradingController {
     private final AlpacaTradingService tradingService;
 
     @GetMapping("/account")
-    public Mono<AccountInfo> getAccount() {
+    public Mono<Account> getAccount() {
         return tradingService.getAccount();
     }
 
@@ -29,7 +32,7 @@ public class AlpacaTradingController {
     }
 
     @GetMapping("/orders")
-    public Flux<Order> getOrders() {
+    public Flux<OrderResponse> getOrders() {
         return tradingService.getOrders();
     }
 }
