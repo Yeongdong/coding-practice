@@ -21,6 +21,13 @@ public class AlpacaWebSocketClient extends WebSocketListener {
         connect();
     }
 
+    public void subscribe(String symbol) {
+        String message = String.format("""
+                {"action": "subscribe", "trades": ["%s"]}
+                """, symbol);
+        webSocket.send(message);
+    }
+
     private void connect() {
         OkHttpClient client = new OkHttpClient();
         Request request = new Request.Builder()
@@ -45,12 +52,5 @@ public class AlpacaWebSocketClient extends WebSocketListener {
     @Override
     public void onMessage(@NotNull WebSocket webSocket, @NotNull String text) {
         log.info("Received: {}", text);
-    }
-
-    public void subscribe(String symbol) {
-        String message = String.format("""
-                {"action": "subscribe", "trades": ["%s"]}
-                """, symbol);
-        webSocket.send(message);
     }
 }
