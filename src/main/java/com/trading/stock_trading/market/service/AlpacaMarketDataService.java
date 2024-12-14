@@ -1,12 +1,14 @@
 package com.trading.stock_trading.market.service;
 
 import com.trading.stock_trading.market.config.AlpacaWebSocketClient;
-import com.trading.stock_trading.market.controller.BarData;
+import com.trading.stock_trading.market.dto.BarData;
+import com.trading.stock_trading.market.dto.LastQuote;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 
 import java.time.LocalDateTime;
 
@@ -33,5 +35,13 @@ public class AlpacaMarketDataService {
     public void subscribeToStock(String symbol) {
         log.info("Subscribing to stock: {}", symbol);
         webSocketClient.subscribe(symbol);
+    }
+
+    public Mono<LastQuote> getLastQuote(String symbol) {
+        return webClient.get()
+                .uri("/v2/stocks/{symbol}/quotes/latest", symbol)
+                .retrieve()
+                .bodyToMono(LastQuote.class)
+                .doOnError(error -> log.error("Failed to get last quote for {}", symbol, error));
     }
 }

@@ -1,4 +1,4 @@
-package com.trading.stock_trading.market.controller;
+package com.trading.stock_trading.market.dto;
 
 import lombok.Data;
 

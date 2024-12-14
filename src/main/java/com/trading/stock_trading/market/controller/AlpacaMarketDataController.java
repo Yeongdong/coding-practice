@@ -1,11 +1,14 @@
 package com.trading.stock_trading.market.controller;
 
+import com.trading.stock_trading.market.dto.BarData;
+import com.trading.stock_trading.market.dto.LastQuote;
 import com.trading.stock_trading.market.service.AlpacaMarketDataService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 
 import java.time.LocalDateTime;
 
@@ -30,5 +33,9 @@ public class AlpacaMarketDataController {
         return marketDataService.getHistoricalBars(symbol, start, end, timeframe);
     }
 
+    @GetMapping("/{symbol}/quote")
+    public Mono<LastQuote> getLastQuote(@PathVariable String symbol) {
+        return marketDataService.getLastQuote(symbol);
+    }
 
 }
