@@ -26,5 +26,5 @@ jobs:
           host: ${{ secrets.HOST }}
           username: ubuntu
           key: ${{ secrets.SSH_PRIVATE_KEY }}
-          source: "build/libs/*.jar"
-          target: "/home/ubuntu"
+          script: |
+            sudo systemctl restart stock-trading
