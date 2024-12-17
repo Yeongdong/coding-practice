@@ -1,0 +1,28 @@
+spring:
+  security:
+    oauth2:
+      client:
+        registration:
+          google:
+            client-id: ${GOOGLE_CLIENT_ID}
+            client-secret: ${GOOGLE_CLIENT_SECRET}
+            scope:
+              - email
+              - profile
+alpaca:
+  api-key: ${ALPACA_API_KEY}
+  secret-key: ${ALPACA_SECRET_KEY}
+  base-url: https://paper-api.alpaca.markets/v2
+
+jwt:
+  secret: ${JWT_SECRET}
+  token-validity-in-seconds: 86400  # 24h
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: prometheus, health, metrics
+  metrics:
+    tags:
+      application: stock-trading
