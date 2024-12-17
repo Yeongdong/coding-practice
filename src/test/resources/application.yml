@@ -9,14 +9,15 @@ spring:
             scope:
               - email
               - profile
+
 alpaca:
   api-key: test-api-key
   secret-key: test-secret-key
   base-url: https://paper-api.alpaca.markets/v2
 
 jwt:
-  secret: test-jwt-secret-key-for-testing-environment-only
-  token-validity-in-seconds: 86400  # 24h
+  secret: testsecretkeytestsecretkeytestsecretkeytestsecretkey
+  token-validity-in-seconds: 86400
 
 management:
   endpoints:
