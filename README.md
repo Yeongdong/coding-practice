@@ -4,6 +4,10 @@
 
 ## 🎯 프로젝트 구성
 
+### 🔹 stock-trading-java/
+- 한국투자증권 API 연동 주식거래 시스템 (Java 버전)
+- C# 버전 개발 전 초기 프로토타입
+
 ### 🔹 board-project/
 - 개인 프로젝트: 게시판 만들기 (Java/Spring)
 
