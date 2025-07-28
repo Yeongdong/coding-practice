@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>회원가입</title>
+</head>
+<body>
+<h2>회원가입</h2>
+<form action="/users/new" th:object="${userForm}" method="post">
+    <div>
+        <label th:text="#{user.loginId}" for="name">ID</label>
+        <input type="text" id="loginId" th:field="*{loginId}" required placeholder="ID를 입력하세요.">
+        <span th:if="${#fields.hasErrors('loginId')}" th:errors="*{loginId}">Incorrect data</span>
+    </div>
+    <div>
+        <label th:text="#{user.name}" for="name">이름</label>
+        <input type="text" id="name" th:field="*{name}" required placeholder="이름을 입력하세요.">
+        <span th:if="${#fields.hasErrors('name')}" th:errors="*{name}">Incorrect data</span>
+    </div>
+    <div>
+        <label th:text="#{user.password}" for="password">비밀번호</label>
+        <input type="password" id="password" th:field="*{password}" required placeholder="비밀번호를 입력하세요.">
+        <span th:if="${#fields.hasErrors('password')}" th:errors="*{password}">Incorrect data</span>
+    </div>
+    <div>
+        <label th:text="#{user.confirmPassword}" for="confirmPassword">비밀번호 확인</label>
+        <input type="password" id="confirmPassword" th:field="*{confirmPassword}" required placeholder="비밀번호를 입력하세요.">
+        <span th:if="${#fields.hasErrors('confirmPassword')}" th:errors="*{confirmPassword}">Incorrect data</span>
+    </div>
+    <button th:text="#{button.join}" type="submit">가입</button>
+</form>
+</body>
+</html>
